@@ -28,7 +28,7 @@ export default function SplashScreen({ onFinish }) {
             <div className="relative text-center">
                 {/* Logo */}
                 <div className={`transition-all duration-700 ${phase >= 1 ? 'opacity-100 scale-100' : 'opacity-0 scale-75'}`}>
-                    <div className="w-28 h-28 mx-auto mb-6 rounded-3xl bg-white/20 backdrop-blur-lg flex items-center justify-center shadow-2xl border border-white/30 overflow-hidden">
+                    <div className="w-44 h-44 mx-auto mb-8 rounded-[2.5rem] bg-white/20 backdrop-blur-lg flex items-center justify-center shadow-2xl border border-white/30 overflow-hidden">
                         <img src={logo} alt={t('app_name')} className="w-full h-full object-contain" />
                     </div>
                 </div>
@@ -43,10 +43,10 @@ export default function SplashScreen({ onFinish }) {
 
                 {/* Subtitle */}
                 <div className={`transition-all duration-700 delay-500 ${phase >= 3 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-                    <p className="text-lg text-white/80 font-light max-w-xs mx-auto">
+                    <p className="text-xl text-white/90 font-medium max-w-sm mx-auto tracking-wide">
                         {t('app_full_name')}
                     </p>
-                    <p className="text-sm text-white/60 mt-2 font-light">
+                    <p className="text-lg text-white mt-3 font-semibold tracking-wide drop-shadow-md">
                         {t('tagline')}
                     </p>
                 </div>

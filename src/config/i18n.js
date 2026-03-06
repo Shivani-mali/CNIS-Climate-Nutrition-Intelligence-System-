@@ -6,7 +6,7 @@ const resources = {
         translation: {
             app_name: 'CNIS',
             app_full_name: 'Climate-Nutrition Intelligence System',
-            tagline: 'Smart nutrition screening',
+            tagline: 'AI-Powered Nutrition Intelligence for Every Child',
             login: 'Sign in with Google',
             logout: 'Logout',
             home: 'Home',
@@ -113,7 +113,7 @@ const resources = {
         translation: {
             app_name: 'CNIS',
             app_full_name: 'जलवायु-पोषण बुद्धिमत्ता प्रणाली',
-            tagline: 'स्मार्ट पोषण जाँच',
+            tagline: 'हर बच्चे के लिए AI-संचालित पोषण बुद्धिमत्ता',
             login: 'Google से साइन इन करें',
             logout: 'लॉग आउट',
             home: 'होम',
@@ -210,7 +210,7 @@ const resources = {
         translation: {
             app_name: 'CNIS',
             app_full_name: 'हवामान-पोषण बुद्धिमत्ता प्रणाली',
-            tagline: 'स्मार्ट पोषण तपासणी',
+            tagline: 'प्रत्येक मुलासाठी एआय-शक्तीवर आधारित पोषण बुद्धिमत्ता',
             login: 'Google ने साइन इन करा',
             logout: 'लॉग आउट',
             home: 'मुख्यपृष्ठ',
