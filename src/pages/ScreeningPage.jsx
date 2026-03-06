@@ -48,6 +48,7 @@ export default function ScreeningPage() {
     const [saved, setSaved] = useState(false);
     const [activeVoiceField, setActiveVoiceField] = useState(null);
     const [voiceStatus, setVoiceStatus] = useState('');
+    const [ageUnit, setAgeUnit] = useState('months');
     const [cameraActive, setCameraActive] = useState(false);
     const [cameraReady, setCameraReady] = useState(false);
     const [cameraError, setCameraError] = useState(null);
@@ -435,8 +436,8 @@ export default function ScreeningPage() {
                 type="button"
                 onClick={() => startVoiceForField(field)}
                 className={`absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center transition-all ${isActive
-                        ? 'bg-red-500 text-white shadow-md scale-110 voice-active'
-                        : 'bg-gray-100 text-gray-400 hover:bg-primary-100 hover:text-clinical-blue'
+                    ? 'bg-red-500 text-white shadow-md scale-110 voice-active'
+                    : 'bg-gray-100 text-gray-400 hover:bg-primary-100 hover:text-clinical-blue'
                     }`}
                 title={isActive ? 'Stop listening' : getVoicePrompt(field, i18n.language)}
             >
@@ -481,8 +482,8 @@ export default function ScreeningPage() {
             {/* Voice Status Bar */}
             {(voiceStatus || isListening || interimTranscript) && (
                 <div className={`rounded-xl px-4 py-2.5 text-sm flex items-center gap-2 transition-all ${voiceStatus.startsWith('❌') ? 'bg-red-50 text-red-600 border border-red-200' :
-                        voiceStatus.startsWith('✅') ? 'bg-green-50 text-green-700 border border-green-200' :
-                            'bg-primary-50 text-clinical-blue border border-primary-200'
+                    voiceStatus.startsWith('✅') ? 'bg-green-50 text-green-700 border border-green-200' :
+                        'bg-primary-50 text-clinical-blue border border-primary-200'
                     }`}>
                     {isListening && (
                         <div className="flex gap-1 items-center">
@@ -537,13 +538,49 @@ export default function ScreeningPage() {
                                 <VoiceButton field="childName" />
                             </div>
                             <div className="relative">
-                                <label className="block text-sm font-medium text-gray-600 mb-1">{t('child_age')}</label>
+                                <div className="flex justify-between items-end mb-1">
+                                    <label className="block text-sm font-medium text-gray-600">{t('child_age')}</label>
+                                    <div className="flex bg-gray-100 rounded-lg p-0.5">
+                                        <button
+                                            type="button"
+                                            onClick={() => setAgeUnit('months')}
+                                            className={`px-2 py-0.5 text-xs font-medium rounded-md transition-all ${ageUnit === 'months' ? 'bg-white shadow-sm text-clinical-blue' : 'text-gray-500 hover:text-gray-700'}`}
+                                        >
+                                            Months
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                setAgeUnit('years');
+                                            }}
+                                            className={`px-2 py-0.5 text-xs font-medium rounded-md transition-all ${ageUnit === 'years' ? 'bg-white shadow-sm text-clinical-blue' : 'text-gray-500 hover:text-gray-700'}`}
+                                        >
+                                            Years
+                                        </button>
+                                    </div>
+                                </div>
                                 <input
                                     type="number"
+                                    step="any"
                                     value={formData.ageMonths}
-                                    onChange={(e) => updateField('ageMonths', e.target.value)}
+                                    onChange={(e) => {
+                                        const val = e.target.value;
+                                        if (val === '') {
+                                            updateField('ageMonths', '');
+                                            return;
+                                        }
+                                        const num = parseFloat(val);
+                                        if (!isNaN(num)) {
+                                            if (ageUnit === 'years') {
+                                                updateField('ageMonths', (num * 12).toString());
+                                                setAgeUnit('months'); // Instantly switch back to show the calculation
+                                            } else {
+                                                updateField('ageMonths', num.toString());
+                                            }
+                                        }
+                                    }}
                                     className="w-full px-4 py-3 pr-12 border-2 border-gray-200 rounded-xl focus:border-clinical-blue focus:ring-2 focus:ring-primary-100 outline-none transition-all bg-white"
-                                    placeholder="e.g. 36"
+                                    placeholder={ageUnit === 'years' ? "e.g. 3" : "e.g. 36"}
                                     id="input-age"
                                 />
                                 <VoiceButton field="ageMonths" />
