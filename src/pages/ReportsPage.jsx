@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { exportToCSV } from '../utils/csvExport';
 
 export default function ReportsPage() {
     const { t } = useTranslation();
@@ -44,9 +45,21 @@ export default function ReportsPage() {
 
     return (
         <div className="space-y-6 animate-fade-in">
-            <div>
-                <h2 className="text-2xl font-bold text-gray-800">{t('reports')}</h2>
-                <p className="text-sm text-gray-500">View and manage screening records</p>
+            <div className="flex items-center justify-between">
+                <div>
+                    <h2 className="text-2xl font-bold text-gray-800">{t('reports')}</h2>
+                    <p className="text-sm text-gray-500">View and manage screening records</p>
+                </div>
+                <button
+                    onClick={() => exportToCSV(filtered, 'child_health_records.csv')}
+                    disabled={filtered.length === 0}
+                    className="flex items-center gap-2 px-4 py-2 bg-clinical-blue text-white rounded-xl hover:bg-clinical-dark transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
+                >
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                    </svg>
+                    <span className="font-semibold text-sm">Download CSV</span>
+                </button>
             </div>
 
             {/* Stats Cards */}
