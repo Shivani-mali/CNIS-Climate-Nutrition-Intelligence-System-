@@ -6,12 +6,13 @@ import { Home, ClipboardList, BarChart3, Syringe, UtensilsCrossed, Bot, Menu, X,
 import logo from '../../logo.png';
 
 const navItems = [
-    { path: '/', icon: <Home className="w-5 h-5" />, labelKey: 'home' },
-    { path: '/screening', icon: <ClipboardList className="w-5 h-5" />, labelKey: 'screening' },
-    { path: '/reports', icon: <BarChart3 className="w-5 h-5" />, labelKey: 'reports' },
-    { path: '/doses', icon: <Syringe className="w-5 h-5" />, labelKey: 'doses' },
-    { path: '/diet-plan', icon: <UtensilsCrossed className="w-5 h-5" />, labelKey: 'diet_plan' },
-    { path: '/chatbot', icon: <Bot className="w-5 h-5" />, labelKey: 'chatbot' },
+    { path: '/', icon: <Home className="w-5 h-5" />, labelKey: 'home', roles: ['asha', 'parent', 'other'] },
+    { path: '/screening', icon: <ClipboardList className="w-5 h-5" />, labelKey: 'screening', roles: ['asha'] },
+    { path: '/reports', icon: <BarChart3 className="w-5 h-5" />, labelKey: 'reports', roles: ['asha'] },
+    { path: '/analytics', icon: <BarChart3 className="w-5 h-5" />, labelKey: 'analytics', roles: ['other'] },
+    { path: '/doses', icon: <Syringe className="w-5 h-5" />, labelKey: 'doses', roles: ['asha', 'parent'] },
+    { path: '/diet-plan', icon: <UtensilsCrossed className="w-5 h-5" />, labelKey: 'diet_plan', roles: ['asha', 'parent'] },
+    { path: '/chatbot', icon: <Bot className="w-5 h-5" />, labelKey: 'chatbot', roles: ['asha', 'parent'] },
 ];
 
 export default function Layout() {
@@ -59,6 +60,8 @@ export default function Layout() {
         { code: 'mr', label: 'म', full: 'मराठी' },
     ];
 
+    const filteredNavItems = navItems.filter(item => !item.roles || item.roles.includes(role));
+
     return (
         <div className={`min-h-screen bg-surface flex flex-col ${darkMode ? 'dark' : ''}`}>
             {/* Top Header */}
@@ -96,7 +99,7 @@ export default function Layout() {
 
                     {/* Center: Desktop Navigation */}
                     <nav className="hidden md:flex items-center gap-1 bg-gray-100 rounded-2xl p-1">
-                        {navItems.map(item => (
+                        {filteredNavItems.map(item => (
                             <button
                                 key={item.path}
                                 onClick={() => navigate(item.path)}
@@ -217,7 +220,7 @@ export default function Layout() {
                         </div>
 
                         <nav className="flex flex-col gap-1">
-                            {navItems.map(item => (
+                            {filteredNavItems.map(item => (
                                 <button
                                     key={item.path}
                                     onClick={() => { navigate(item.path); setSidebarOpen(false); }}
@@ -267,7 +270,7 @@ export default function Layout() {
             {/* Bottom Navigation (Mobile only) */}
             <nav className="md:hidden sticky bottom-0 z-30 glass border-t border-gray-200/50 shadow-top">
                 <div className="flex items-center justify-around px-2 py-2">
-                    {navItems.map(item => (
+                    {filteredNavItems.map(item => (
                         <button
                             key={item.path}
                             onClick={() => navigate(item.path)}

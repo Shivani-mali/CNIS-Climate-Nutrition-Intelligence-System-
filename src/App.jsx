@@ -12,6 +12,7 @@ import ReportsPage from './pages/ReportsPage';
 import ChatbotPage from './pages/ChatbotPage';
 import DosesPage from './pages/DosesPage';
 import DietPlanPage from './pages/DietPlanPage';
+import AnalyticsPage from './pages/AnalyticsPage';
 
 // ... (other imports)
 import logo from '../logo.png';
@@ -64,6 +65,7 @@ function AppContent() {
           <Route path="/doses" element={<DosesPage />} />
           <Route path="/chatbot" element={<ChatbotPage />} />
           <Route path="/diet-plan" element={<DietPlanPage />} />
+          <Route path="/analytics" element={<AnalyticsPage />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
