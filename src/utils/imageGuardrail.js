@@ -47,6 +47,7 @@ Check the following:
 2. If yes, is the person a child (approximately 0-5 years old)?
 3. If yes, what appears to be the child's gender?
 4. Is the photo clear enough for medical/health screening purposes?
+5. CRITICAL: Look very closely for any visual signs of malnutrition. Do you see severe wasting (extremely thin limbs, loose skin), visibly prominent ribs, or edema (swelling, especially in the belly or feet)?
 
 The expected gender selected by the parent is: ${expectedGender}
 
@@ -59,7 +60,9 @@ Respond in this exact JSON format:
   "genderMatch": true or false,
   "photoQuality": "good/fair/poor",
   "confidence": 0.0 to 1.0,
-  "description": "brief description of what you see"
+  "description": "brief description of what you see",
+  "visibleMalnutritionSigns": true or false,
+  "malnutritionDetails": "describe any visual signs of malnutrition observed, or state none observed. Be clinical but clear."
 }`;
 
         const response = await fetch(
@@ -88,8 +91,9 @@ Respond in this exact JSON format:
         );
 
         if (!response.ok) {
-            console.error('Gemini API error:', response.status);
-            return null;
+            const errorData = await response.text();
+            console.error('Gemini API error:', response.status, errorData);
+            return { error: true, status: response.status, message: errorData };
         }
 
         const data = await response.json();
@@ -109,10 +113,10 @@ Respond in this exact JSON format:
             return result;
         }
 
-        return null;
+        return { error: true, message: 'Invalid JSON response from Gemini' };
     } catch (error) {
         console.error('Gemini validation error:', error);
-        return null;
+        return { error: true, message: error.message || 'Network error' };
     }
 }
 
@@ -166,7 +170,7 @@ export async function validateChildPhoto(imageSource, expectedGender = 'unknown'
         // Try Gemini Vision API first (most accurate)
         const geminiResult = await validateWithGemini(imageSource, expectedGender);
 
-        if (geminiResult) {
+        if (geminiResult && !geminiResult.error) {
             console.log('Gemini validation result:', geminiResult);
 
             // Not a person at all
@@ -215,11 +219,46 @@ export async function validateChildPhoto(imageSource, expectedGender = 'unknown'
                     ? ` | Age: ${geminiResult.estimatedAge}`
                     : '';
 
+                const malnutritionWarning = geminiResult.visibleMalnutritionSigns
+                    ? `\n⚠️ AI observed potential visual signs of malnutrition: ${geminiResult.malnutritionDetails}`
+                    : '';
+
                 return {
                     valid: true,
-                    message: `✅ Child detected (${Math.round((geminiResult.confidence || 0.8) * 100)}% confidence)${ageNote}${genderNote}${qualityNote}`,
+                    message: `✅ Child detected (${Math.round((geminiResult.confidence || 0.8) * 100)}% confidence)${ageNote}${genderNote}${qualityNote}${malnutritionWarning}`,
                     details: geminiResult,
-                    confidence: geminiResult.confidence || 0.8
+                    confidence: geminiResult.confidence || 0.8,
+                    malnutritionDetected: geminiResult.visibleMalnutritionSigns || false,
+                    malnutritionDetails: geminiResult.malnutritionDetails || ''
+                };
+            }
+        }
+
+        // Handle specific Gemini errors if present
+        if (geminiResult && geminiResult.error) {
+            console.warn('Gemini validation failed, reason:', geminiResult.message);
+            if (geminiResult.status === 400 && geminiResult.message.includes('API key')) {
+                return {
+                    valid: false,
+                    message: '❌ AI validation unavailable: Invalid or missing API Key. Please check your .env file.',
+                    details: { error: 'API_KEY_ERROR' },
+                    confidence: 0
+                };
+            }
+            if (geminiResult.status === 403 && geminiResult.message.includes('leaked')) {
+                return {
+                    valid: false,
+                    message: '❌ AI validation unavailable: Your Gemini API key has been disabled because it was leaked. Please generate a new key.',
+                    details: { error: 'API_KEY_LEAKED' },
+                    confidence: 0
+                };
+            }
+            if (geminiResult.status === 429) {
+                return {
+                    valid: false,
+                    message: '❌ AI validation unavailable: Your Gemini API key has exceeded its usage quota (or rate limit). Please wait or generate a new key.',
+                    details: { error: 'API_KEY_QUOTA_EXCEEDED' },
+                    confidence: 0
                 };
             }
         }

@@ -198,6 +198,9 @@ export default function ScreeningPage() {
         setCameraError(null);
         setCameraReady(false);
         try {
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                throw new Error('Camera access requires a secure HTTPS connection (or localhost), or is not supported by your browser. Please use the Upload Photo option instead.');
+            }
             // Try rear camera first, fallback to any camera
             let stream;
             try {
@@ -1105,6 +1108,18 @@ export default function ScreeningPage() {
                                                                     }`}>{photoValidation.details.photoQuality}</span>
                                                             </p>
                                                         )}
+                                                    </div>
+                                                )}
+
+                                                {/* Malnutrition Warning UI */}
+                                                {photoValidation.malnutritionDetected && (
+                                                    <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg">
+                                                        <p className="text-sm font-bold text-red-700 flex items-center gap-1.5">
+                                                            <span className="text-base">⚠️</span> AI Malnutrition Warning
+                                                        </p>
+                                                        <p className="text-xs text-red-600 mt-1 leading-relaxed">
+                                                            {photoValidation.malnutritionDetails}
+                                                        </p>
                                                     </div>
                                                 )}
                                             </div>
