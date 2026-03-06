@@ -39,9 +39,19 @@ A full-stack React web application for ASHA workers, parents, and healthcare pro
 ### 7. Multilingual (i18next)
 - English, Hindi, Marathi
 
-### 8. Firebase Integration
-- Google Authentication
-- Firestore for screening records
+### 8. Offline First (PWA)
+- Full Progressive Web App (PWA) allowing zero-network installation
+- Service Worker caches CSS, JS, HTML, fonts, and assets
+- Offline Firestore persistence (IndexedDB)
+- Background syncing when internet connection returns
+
+### 9. Vaccination & Health Tracking
+- Dedicated "Doses" page tracking National Immunization Schedule
+- Data Export feature allows downloading complete screening records as Excel-friendly CSVs
+
+### 10. Firebase Integration
+- Google Authentication with Offline Demo fallback
+- Firestore for remote and local screening records
 - Security rules for data privacy
 
 ## Setup
