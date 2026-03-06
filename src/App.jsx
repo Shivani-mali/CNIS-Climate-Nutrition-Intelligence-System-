@@ -12,6 +12,9 @@ import ReportsPage from './pages/ReportsPage';
 import ChatbotPage from './pages/ChatbotPage';
 import DosesPage from './pages/DosesPage';
 
+// ... (other imports)
+import logo from '../logo.png';
+
 function AppContent() {
   const { user, role, loading } = useAuth();
   const [showSplash, setShowSplash] = useState(true);
@@ -30,10 +33,10 @@ function AppContent() {
     return (
       <div className="min-h-screen flex items-center justify-center gradient-clinical">
         <div className="text-center">
-          <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-white/20 flex items-center justify-center animate-pulse">
-            <span className="text-3xl">🏥</span>
+          <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-white/20 flex flex-col items-center justify-center animate-pulse overflow-hidden">
+             <img src={logo} alt="Loading..." className="w-full h-full object-contain p-2" />
           </div>
-          <p className="text-white/80">Loading...</p>
+          <p className="text-white/80 font-medium">Loading...</p>
         </div>
       </div>
     );
