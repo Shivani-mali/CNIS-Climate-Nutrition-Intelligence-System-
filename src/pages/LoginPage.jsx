@@ -36,6 +36,9 @@ export default function LoginPage() {
                         <p className="text-sm text-gray-500 mt-1 font-medium">
                             {t('app_full_name')}
                         </p>
+                        <p className="text-sm text-clinical-blue mt-2 font-medium">
+                            AI-Powered Nutrition Intelligence for Every Child
+                        </p>
                     </div>
 
                     {/* Welcome text */}

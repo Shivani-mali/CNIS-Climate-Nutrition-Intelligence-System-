@@ -1,5 +1,7 @@
 # CNIS - Climate-Nutrition Intelligence System
 
+*AI-Powered Nutrition Intelligence for Every Child*
+
 A full-stack React web application for ASHA workers, parents, and healthcare professionals to screen, monitor, and manage child malnutrition with voice-enabled, multilingual, and AI-powered features.
 
 ## Features
