@@ -2,14 +2,16 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, useLocation, Outlet } from 'react-router-dom';
+import { Home, ClipboardList, BarChart3, Syringe, UtensilsCrossed, Bot, Menu, X, Sun, Moon, LogOut, Mic, MapPin } from 'lucide-react';
 import logo from '../../logo.png';
 
 const navItems = [
-    { path: '/', icon: '🏠', labelKey: 'home' },
-    { path: '/screening', icon: '📋', labelKey: 'screening' },
-    { path: '/reports', icon: '📊', labelKey: 'reports' },
-    { path: '/doses', icon: '💉', labelKey: 'doses' },
-    { path: '/chatbot', icon: '🤖', labelKey: 'chatbot' },
+    { path: '/', icon: <Home className="w-5 h-5" />, labelKey: 'home' },
+    { path: '/screening', icon: <ClipboardList className="w-5 h-5" />, labelKey: 'screening' },
+    { path: '/reports', icon: <BarChart3 className="w-5 h-5" />, labelKey: 'reports' },
+    { path: '/doses', icon: <Syringe className="w-5 h-5" />, labelKey: 'doses' },
+    { path: '/diet-plan', icon: <UtensilsCrossed className="w-5 h-5" />, labelKey: 'diet_plan' },
+    { path: '/chatbot', icon: <Bot className="w-5 h-5" />, labelKey: 'chatbot' },
 ];
 
 export default function Layout() {
@@ -119,7 +121,7 @@ export default function Layout() {
                             id="dark-mode-toggle"
                             title={darkMode ? 'Light Mode' : 'Dark Mode'}
                         >
-                            <span className="text-xl">{darkMode ? '☀️' : '🌙'}</span>
+                            {darkMode ? <Sun className="w-5 h-5 text-yellow-500" /> : <Moon className="w-5 h-5 text-indigo-500" />}
                         </button>
 
                         {/* Language Switcher */}
@@ -186,9 +188,7 @@ export default function Layout() {
                                     className="w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded-xl transition-colors flex items-center gap-2"
                                     id="logout-btn"
                                 >
-                                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                                    </svg>
+                                    <LogOut className="w-4 h-4" />
                                     {t('logout')}
                                 </button>
                             </div>
@@ -238,7 +238,7 @@ export default function Layout() {
                                 onClick={() => setDarkMode(!darkMode)}
                                 className="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 hover:bg-gray-100 w-full text-left transition-all"
                             >
-                                <span className="text-xl">{darkMode ? '☀️' : '🌙'}</span>
+                                {darkMode ? <Sun className="w-5 h-5 text-yellow-500" /> : <Moon className="w-5 h-5 text-indigo-500" />}
                                 <span>{darkMode ? 'Light Mode' : 'Dark Mode'}</span>
                             </button>
                         </div>
@@ -246,7 +246,7 @@ export default function Layout() {
                         {/* Drawer footer */}
                         <div className="mt-auto p-4 bg-gradient-to-br from-primary-50 to-primary-100 rounded-2xl">
                             <div className="flex items-center gap-2 mb-2">
-                                <span className="text-2xl">🎤</span>
+                                <Mic className="w-5 h-5 text-clinical-blue" />
                                 <span className="text-sm font-semibold text-clinical-dark">Voice Enabled</span>
                             </div>
                             <p className="text-xs text-gray-500">

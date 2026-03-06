@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
+import { Lock, Mic } from 'lucide-react';
 
 export default function LoginPage() {
     const { t } = useTranslation();
@@ -78,11 +79,11 @@ export default function LoginPage() {
                     {/* Features list */}
                     <div className="space-y-3">
                         {[
-                            { icon: '🔒', text: 'End-to-end encrypted data' },
-                            { icon: '🗣️', text: 'Voice-enabled for hands-free use' },
+                            { icon: <Lock className="w-5 h-5 text-clinical-blue" />, text: 'End-to-end encrypted data' },
+                            { icon: <Mic className="w-5 h-5 text-clinical-blue" />, text: 'Voice-enabled for hands-free use' },
                         ].map((item, i) => (
                             <div key={i} className="flex items-center gap-3 text-sm text-gray-600">
-                                <span className="text-lg">{item.icon}</span>
+                                <span className="flex items-center justify-center">{item.icon}</span>
                                 <span>{item.text}</span>
                             </div>
                         ))}

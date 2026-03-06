@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
+import { Stethoscope, Users, Microscope } from 'lucide-react';
 import logo from '../../logo.png';
 
 const roles = [
@@ -7,7 +8,7 @@ const roles = [
         id: 'asha',
         labelKey: 'asha_worker',
         descKey: 'role_asha_desc',
-        icon: '👩‍⚕️',
+        icon: <Stethoscope className="w-7 h-7 text-white" />,
         gradient: 'from-blue-500 to-blue-600',
         bgLight: 'bg-blue-50',
         borderColor: 'border-blue-200',
@@ -17,7 +18,7 @@ const roles = [
         id: 'parent',
         labelKey: 'parent',
         descKey: 'role_parent_desc',
-        icon: '👨‍👩‍👧',
+        icon: <Users className="w-7 h-7 text-white" />,
         gradient: 'from-emerald-500 to-emerald-600',
         bgLight: 'bg-emerald-50',
         borderColor: 'border-emerald-200',
@@ -27,7 +28,7 @@ const roles = [
         id: 'other',
         labelKey: 'other',
         descKey: 'role_other_desc',
-        icon: '🔬',
+        icon: <Microscope className="w-7 h-7 text-white" />,
         gradient: 'from-purple-500 to-purple-600',
         bgLight: 'bg-purple-50',
         borderColor: 'border-purple-200',
@@ -74,7 +75,7 @@ export default function RoleSelection() {
                         >
                             <div className="flex items-center gap-4">
                                 <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${role.gradient} flex items-center justify-center shadow-md group-hover:scale-110 transition-transform duration-300`}>
-                                    <span className="text-2xl">{role.icon}</span>
+                                    {role.icon}
                                 </div>
                                 <div className="flex-1">
                                     <h3 className="text-lg font-semibold text-gray-800 group-hover:text-clinical-blue transition-colors">

@@ -6,6 +6,8 @@ import { performScreening } from '../utils/screening';
 import { getDietRecommendations, getDangerSigns, detectLocation, detectSeason } from '../utils/diet';
 import { validateChildPhoto } from '../utils/imageGuardrail';
 import { speak, getTTSLang, parseSpokenNumber, getVoicePrompt } from '../utils/voice';
+import { DietPlanContent } from './DietPlanPage';
+import { User, Ruler, MapPin, Stethoscope, Camera, Upload, AlertCircle, AlertTriangle, CheckCircle, Volume2, ShieldAlert, ClipboardList, UtensilsCrossed, Lightbulb, Save, CheckSquare } from 'lucide-react';
 
 const medicalConditions = ['diarrhea', 'fever', 'cough', 'edema', 'lethargy'];
 
@@ -687,7 +689,7 @@ export default function ScreeningPage() {
                     }`}
                 title={isActive ? 'Stop listening' : getVoicePrompt(field, i18n.language)}
             >
-                {isActive ? '🔴' : '🎤'}
+                {isActive ? <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" /> : <Volume2 className="w-4 h-4" />}
             </button>
         );
     };
@@ -714,7 +716,7 @@ export default function ScreeningPage() {
                         }`}
                     title={isListening ? 'Stop listening' : 'Start voice commands'}
                 >
-                    <span>{isListening ? '🔴' : '🎤'}</span>
+                    <span>{isListening ? <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse inline-block" /> : <Volume2 className="w-4 h-4" />}</span>
                     <span className="text-sm font-medium hidden sm:inline">
                         {isListening
                             ? (activeVoiceField
@@ -768,7 +770,7 @@ export default function ScreeningPage() {
                     {/* Child Info */}
                     <div className="glass rounded-2xl p-5 border border-gray-100">
                         <h3 className="font-semibold text-gray-700 mb-4 flex items-center gap-2">
-                            <span className="text-lg">👶</span> Child Information
+                            <User className="w-5 h-5 text-indigo-500" /> Child Information
                         </h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="relative">
@@ -854,7 +856,7 @@ export default function ScreeningPage() {
                     {/* Measurements */}
                     <div className="glass rounded-2xl p-5 border border-gray-100">
                         <h3 className="font-semibold text-gray-700 mb-4 flex items-center gap-2">
-                            <span className="text-lg">📏</span> Measurements
+                            <Ruler className="w-5 h-5 text-indigo-500" /> Measurements
                         </h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             {[
@@ -889,7 +891,7 @@ export default function ScreeningPage() {
                     {/* Location Selector */}
                     <div className="glass rounded-2xl p-5 border border-gray-100">
                         <h3 className="font-semibold text-gray-700 mb-4 flex items-center gap-2">
-                            <span className="text-lg">📍</span> Location
+                            <MapPin className="w-5 h-5 text-indigo-500" /> Location
                         </h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
@@ -970,7 +972,7 @@ export default function ScreeningPage() {
                     {/* Medical History */}
                     <div className="glass rounded-2xl p-5 border border-gray-100">
                         <h3 className="font-semibold text-gray-700 mb-4 flex items-center gap-2">
-                            <span className="text-lg">🩺</span> {t('medical_history')}
+                            <Stethoscope className="w-5 h-5 text-indigo-500" /> {t('medical_history')}
                         </h3>
                         <div className="flex flex-wrap gap-2">
                             {medicalConditions.map(condition => (
@@ -995,7 +997,7 @@ export default function ScreeningPage() {
                     {/* Camera Capture */}
                     <div className="glass rounded-2xl p-5 border border-gray-100">
                         <h3 className="font-semibold text-gray-700 mb-4 flex items-center gap-2">
-                            <span className="text-lg">📸</span> Child Photo
+                            <Camera className="w-5 h-5 text-indigo-500" /> Child Photo
                         </h3>
 
                         {/* Hidden file input for fallback */}
@@ -1019,7 +1021,7 @@ export default function ScreeningPage() {
                                         id="start-camera-btn"
                                     >
                                         <div className="w-12 h-12 rounded-xl bg-primary-50 flex items-center justify-center group-hover:bg-primary-100 transition-colors">
-                                            <span className="text-2xl">📷</span>
+                                            <Camera className="w-6 h-6 text-clinical-blue" />
                                         </div>
                                         <div className="text-left">
                                             <p className="font-semibold text-gray-700 text-sm">Open Camera</p>
@@ -1033,7 +1035,7 @@ export default function ScreeningPage() {
                                         id="upload-photo-btn"
                                     >
                                         <div className="w-12 h-12 rounded-xl bg-green-50 flex items-center justify-center group-hover:bg-green-100 transition-colors">
-                                            <span className="text-2xl">📁</span>
+                                            <Upload className="w-6 h-6 text-green-600" />
                                         </div>
                                         <div className="text-left">
                                             <p className="font-semibold text-gray-700 text-sm">Upload Photo</p>
@@ -1100,7 +1102,7 @@ export default function ScreeningPage() {
                                             }`}
                                         id="capture-btn"
                                     >
-                                        📸 {cameraReady ? 'Capture Photo' : 'Loading...'}
+                                        <Camera className="w-5 h-5" /> {cameraReady ? 'Capture Photo' : 'Loading...'}
                                     </button>
                                     <button
                                         onClick={stopCamera}
@@ -1224,8 +1226,8 @@ export default function ScreeningPage() {
                         }`}>
                         <div className="flex items-center gap-4">
                             <div className="w-16 h-16 rounded-2xl bg-white/20 flex items-center justify-center">
-                                <span className="text-4xl">
-                                    {result.zone === 'red' ? '🚨' : result.zone === 'orange' ? '⚠️' : '✅'}
+                                <span className="text-4xl flex items-center justify-center">
+                                    {result.zone === 'red' ? <AlertCircle className="w-10 h-10 text-white" /> : result.zone === 'orange' ? <AlertTriangle className="w-10 h-10 text-white" /> : <CheckCircle className="w-10 h-10 text-white" />}
                                 </span>
                             </div>
                             <div>
@@ -1260,7 +1262,7 @@ export default function ScreeningPage() {
                             </>
                         ) : (
                             <>
-                                🔊 {i18n.language === 'hi' ? 'परिणाम सुनें' : i18n.language === 'mr' ? 'निकाल ऐका' : 'Read Results Aloud'}
+                                <Volume2 className="w-5 h-5" /> {i18n.language === 'hi' ? 'परिणाम सुनें' : i18n.language === 'mr' ? 'निकाल ऐका' : 'Read Results Aloud'}
                             </>
                         )}
                     </button>
@@ -1269,7 +1271,7 @@ export default function ScreeningPage() {
                     {dangerSigns.length > 0 && (
                         <div className="bg-red-50 border-2 border-red-200 rounded-2xl p-5">
                             <h3 className="font-bold text-red-700 mb-3 flex items-center gap-2">
-                                <span className="text-xl">🚨</span> {t('danger_signs')}
+                                <AlertTriangle className="w-6 h-6 text-red-600" /> {t('danger_signs')}
                             </h3>
                             <div className="space-y-2">
                                 {dangerSigns.map((sign, i) => (
@@ -1283,8 +1285,8 @@ export default function ScreeningPage() {
                                     </div>
                                 ))}
                             </div>
-                            <p className="mt-3 text-sm font-semibold text-red-600 bg-red-100 rounded-lg px-3 py-2">
-                                🏥 {t('seek_medical')}
+                            <p className="mt-3 text-sm font-semibold text-red-600 bg-red-100 rounded-lg px-3 py-2 flex items-center gap-2">
+                                <ShieldAlert className="w-4 h-4" /> {t('seek_medical')}
                             </p>
                         </div>
                     )}
@@ -1293,7 +1295,7 @@ export default function ScreeningPage() {
                     {result.recommendations && (
                         <div className="glass rounded-2xl p-5 border border-gray-100">
                             <h3 className="font-semibold text-gray-700 mb-3 flex items-center gap-2">
-                                <span className="text-lg">📋</span> {t('action_plan')}
+                                <ClipboardList className="w-5 h-5 text-indigo-500" /> {t('action_plan')}
                             </h3>
                             <div className="space-y-2">
                                 <div className="p-3 bg-primary-50 rounded-xl">
@@ -1313,7 +1315,7 @@ export default function ScreeningPage() {
                     {dietInfo && (
                         <div className="glass rounded-2xl p-5 border border-gray-100">
                             <h3 className="font-semibold text-gray-700 mb-2 flex items-center gap-2">
-                                <span className="text-lg">🍽️</span> {t('diet_recommendations')}
+                                <UtensilsCrossed className="w-5 h-5 text-indigo-500" /> {t('diet_recommendations')}
                             </h3>
                             <div className="flex items-center gap-3 mb-4">
                                 <span className="px-3 py-1 bg-primary-50 text-clinical-blue text-xs font-medium rounded-full text-left">
@@ -1335,7 +1337,7 @@ export default function ScreeningPage() {
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                 {dietInfo.foods?.map((food, i) => (
                                     <div key={i} className="flex items-start gap-3 p-3 bg-gray-50 rounded-xl hover:bg-primary-50 transition-colors">
-                                        <span className="text-2xl">{food.emoji}</span>
+                                        <span className="flex items-center justify-center p-2 bg-white rounded-lg shadow-sm border border-gray-100"><UtensilsCrossed className="w-6 h-6 text-indigo-400" /></span>
                                         <div>
                                             <p className="font-semibold text-gray-800 text-sm">{t(food.name)}</p>
                                             <p className="text-xs text-gray-500">{t(food.benefit)}</p>
@@ -1347,7 +1349,7 @@ export default function ScreeningPage() {
 
                             {dietInfo.tips && (
                                 <div className="mt-4">
-                                    <p className="text-sm font-medium text-gray-600 mb-2">💡 {t('tips')}:</p>
+                                    <p className="text-sm font-medium text-gray-600 mb-2 flex items-center gap-1"><Lightbulb className="w-4 h-4 text-amber-500" /> {t('tips')}:</p>
                                     <ul className="space-y-1">
                                         {dietInfo.tips.map((tip, i) => (
                                             <li key={i} className="text-xs text-gray-500 pl-4 relative before:content-['•'] before:absolute before:left-0 before:text-clinical-blue">
@@ -1357,6 +1359,10 @@ export default function ScreeningPage() {
                                     </ul>
                                 </div>
                             )}
+
+                            <div className="mt-6 pt-6 border-t border-gray-100">
+                                <DietPlanContent />
+                            </div>
                         </div>
                     )}
 
@@ -1374,9 +1380,9 @@ export default function ScreeningPage() {
                             {isSaving ? (
                                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
                             ) : saved ? (
-                                <>✅ {t('saved')}</>
+                                <span className="flex items-center gap-1"><CheckSquare className="w-5 h-5" /> {t('saved')}</span>
                             ) : (
-                                <>💾 {t('save_data')}</>
+                                <span className="flex items-center gap-1"><Save className="w-5 h-5" /> {t('save_data')}</span>
                             )}
                         </button>
                         <button

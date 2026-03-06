@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { exportToCSV } from '../utils/csvExport';
+import { ClipboardList, AlertCircle, AlertTriangle, CheckCircle, User, Ruler, Scale, MapPin, Trash2, Download } from 'lucide-react';
 
 export default function ReportsPage() {
     const { t, i18n } = useTranslation();
@@ -56,9 +57,7 @@ export default function ReportsPage() {
                     disabled={filtered.length === 0}
                     className="flex items-center gap-2 px-4 py-2 bg-clinical-blue text-white rounded-xl hover:bg-clinical-dark transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
                 >
-                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                    </svg>
+                    <Download className="w-5 h-5" />
                     <span className="font-semibold text-sm">{t('download_csv') || 'Download CSV'}</span>
                 </button>
             </div>
@@ -66,10 +65,10 @@ export default function ReportsPage() {
             {/* Stats Cards */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 {[
-                    { label: t('total_screenings'), value: stats.total, icon: '📋', color: 'text-blue-600', bg: 'bg-blue-50', filter: 'all' },
-                    { label: t('sam_cases'), value: stats.sam, icon: '🔴', color: 'text-red-600', bg: 'bg-red-50', filter: 'red' },
-                    { label: t('mam_cases'), value: stats.mam, icon: '🟠', color: 'text-orange-500', bg: 'bg-orange-50', filter: 'orange' },
-                    { label: t('normal_cases'), value: stats.normal, icon: '🟢', color: 'text-green-600', bg: 'bg-green-50', filter: 'green' },
+                    { label: t('total_screenings'), value: stats.total, icon: <ClipboardList className="w-5 h-5 text-blue-600" />, color: 'text-blue-600', bg: 'bg-blue-50', filter: 'all' },
+                    { label: t('sam_cases'), value: stats.sam, icon: <AlertCircle className="w-5 h-5 text-red-600" />, color: 'text-red-600', bg: 'bg-red-50', filter: 'red' },
+                    { label: t('mam_cases'), value: stats.mam, icon: <AlertTriangle className="w-5 h-5 text-orange-500" />, color: 'text-orange-500', bg: 'bg-orange-50', filter: 'orange' },
+                    { label: t('normal_cases'), value: stats.normal, icon: <CheckCircle className="w-5 h-5 text-green-600" />, color: 'text-green-600', bg: 'bg-green-50', filter: 'green' },
                 ].map((stat, i) => (
                     <button
                         key={i}
@@ -89,7 +88,7 @@ export default function ReportsPage() {
             {/* Reports List */}
             {filtered.length === 0 ? (
                 <div className="glass rounded-2xl p-10 text-center border border-gray-100">
-                    <div className="text-5xl mb-4">📋</div>
+                    <div className="flex justify-center mb-4"><ClipboardList className="w-12 h-12 text-gray-300" /></div>
                     <p className="text-gray-500 font-medium">{t('no_reports')}</p>
                 </div>
             ) : (
@@ -108,9 +107,9 @@ export default function ReportsPage() {
                                             report.result?.zone === 'orange' ? 'bg-orange-100' :
                                                 'bg-green-100'
                                         }`}>
-                                        <span className="text-xl">
-                                            {report.result?.zone === 'red' ? '🚨' :
-                                                report.result?.zone === 'orange' ? '⚠️' : '✅'}
+                                        <span className="flex items-center justify-center">
+                                            {report.result?.zone === 'red' ? <AlertCircle className="w-6 h-6 text-red-500" /> :
+                                                report.result?.zone === 'orange' ? <AlertTriangle className="w-6 h-6 text-orange-500" /> : <CheckCircle className="w-6 h-6 text-green-500" />}
                                         </span>
                                     </div>
                                     <div>
@@ -122,8 +121,8 @@ export default function ReportsPage() {
                                                 }`}>
                                                 {report.result?.overallStatus === 'Normal' ? t('normal') : report.result?.overallStatus || t('normal')}
                                             </span>
-                                            <span className="text-xs text-gray-400">
-                                                {report.gender === 'male' ? '👦' : '👧'} {report.ageMonths}{t('months_short') || 'mo'}
+                                            <span className="flex items-center gap-1 text-xs text-gray-400">
+                                                <User className={`w-3 h-3 ${report.gender === 'male' ? 'text-blue-400' : 'text-pink-400'}`} /> {report.ageMonths}{t('months_short') || 'mo'}
                                             </span>
                                         </div>
                                     </div>
@@ -138,16 +137,16 @@ export default function ReportsPage() {
 
                             {/* Expanded details */}
                             <div className="mt-3 pt-3 border-t border-gray-100 flex items-center justify-between">
-                                <div className="flex gap-4 text-xs text-gray-500">
-                                    {report.heightCm && <span>📏 {report.heightCm}cm</span>}
-                                    {report.weightKg && <span>⚖️ {report.weightKg}kg</span>}
-                                    {report.location?.state && <span>📍 {report.location.address ? `${report.location.address}, ` : ''}{(report.location.city && report.location.city !== 'Unknown') ? `${report.location.city}, ` : ''}{report.location.state}</span>}
+                                <div className="flex flex-wrap gap-4 text-xs text-gray-500">
+                                    {report.heightCm && <span className="flex items-center gap-1"><Ruler className="w-3 h-3" /> {report.heightCm}cm</span>}
+                                    {report.weightKg && <span className="flex items-center gap-1"><Scale className="w-3 h-3" /> {report.weightKg}kg</span>}
+                                    {report.location?.state && <span className="flex items-center gap-1"><MapPin className="w-3 h-3" /> {report.location.address ? `${report.location.address}, ` : ''}{(report.location.city && report.location.city !== 'Unknown') ? `${report.location.city}, ` : ''}{report.location.state}</span>}
                                 </div>
                                 <button
                                     onClick={() => deleteReport(report.id)}
-                                    className="text-xs text-red-400 hover:text-red-600 transition-colors px-2 py-1 rounded-lg hover:bg-red-50"
+                                    className="flex items-center gap-1 text-xs text-red-400 hover:text-red-600 transition-colors px-2 py-1 rounded-lg hover:bg-red-50"
                                 >
-                                    🗑️ {t('delete') || 'Delete'}
+                                    <Trash2 className="w-3 h-3" /> {t('delete') || 'Delete'}
                                 </button>
                             </div>
                         </div>

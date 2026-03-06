@@ -2,18 +2,19 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { ClipboardList, BarChart3, Bot, AlertCircle, AlertTriangle, CheckCircle, Ruler } from 'lucide-react';
 
 const quickActions = [
-    { path: '/screening', icon: '📋', labelKey: 'start_screening', color: 'from-blue-500 to-blue-600', desc: 'Begin a new child nutrition screening' },
-    { path: '/reports', icon: '📊', labelKey: 'reports', color: 'from-emerald-500 to-emerald-600', desc: 'View screening history and reports' },
-    { path: '/chatbot', icon: '🤖', labelKey: 'chatbot', color: 'from-purple-500 to-purple-600', desc: 'Ask the AI nutrition assistant' },
+    { path: '/screening', icon: <ClipboardList className="w-6 h-6 text-white" />, labelKey: 'start_screening', color: 'from-blue-500 to-blue-600', desc: 'Begin a new child nutrition screening' },
+    { path: '/reports', icon: <BarChart3 className="w-6 h-6 text-white" />, labelKey: 'reports', color: 'from-emerald-500 to-emerald-600', desc: 'View screening history and reports' },
+    { path: '/chatbot', icon: <Bot className="w-6 h-6 text-white" />, labelKey: 'chatbot', color: 'from-purple-500 to-purple-600', desc: 'Ask the AI nutrition assistant' },
 ];
 
 const stats = [
-    { key: 'total_screenings', value: '0', icon: '📋', color: 'text-blue-600', bg: 'bg-blue-50' },
-    { key: 'sam_cases', value: '0', icon: '🔴', color: 'text-red-600', bg: 'bg-red-50' },
-    { key: 'mam_cases', value: '0', icon: '🟠', color: 'text-orange-500', bg: 'bg-orange-50' },
-    { key: 'normal_cases', value: '0', icon: '🟢', color: 'text-green-600', bg: 'bg-green-50' },
+    { key: 'total_screenings', value: '0', icon: <ClipboardList className="w-5 h-5 text-blue-600" />, color: 'text-blue-600', bg: 'bg-blue-50' },
+    { key: 'sam_cases', value: '0', icon: <AlertCircle className="w-5 h-5 text-red-600" />, color: 'text-red-600', bg: 'bg-red-50' },
+    { key: 'mam_cases', value: '0', icon: <AlertTriangle className="w-5 h-5 text-orange-500" />, color: 'text-orange-500', bg: 'bg-orange-50' },
+    { key: 'normal_cases', value: '0', icon: <CheckCircle className="w-5 h-5 text-green-600" />, color: 'text-green-600', bg: 'bg-green-50' },
 ];
 
 export default function HomePage() {
@@ -60,7 +61,7 @@ export default function HomePage() {
                 <div className="relative z-10">
                     <p className="text-white/70 text-sm mb-1">{greeting()}</p>
                     <h2 className="text-2xl md:text-3xl font-bold mb-1">
-                        {user?.displayName || 'Health Worker'} 👋
+                        {user?.displayName || 'Health Worker'}
                     </h2>
                     <p className="text-white/80 text-sm max-w-md">
                         {role === 'asha' ? 'Ready to screen children and track nutrition in your community.' :
@@ -79,7 +80,7 @@ export default function HomePage() {
                         style={{ animationDelay: `${i * 80}ms` }}
                     >
                         <div className={`w-10 h-10 ${stat.bg} rounded-xl flex items-center justify-center mb-3`}>
-                            <span className="text-lg">{stat.icon}</span>
+                            {stat.icon}
                         </div>
                         <p className={`text-2xl font-bold ${stat.color}`}>{stat.value}</p>
                         <p className="text-xs text-gray-500 mt-0.5">{t(stat.key)}</p>
@@ -100,7 +101,7 @@ export default function HomePage() {
                             style={{ animationDelay: `${(i + 4) * 80}ms` }}
                         >
                             <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${action.color} flex items-center justify-center mb-3 shadow-md group-hover:scale-110 transition-transform`}>
-                                <span className="text-2xl">{action.icon}</span>
+                                {action.icon}
                             </div>
                             <h4 className="font-semibold text-gray-800 group-hover:text-clinical-blue transition-colors">
                                 {t(action.labelKey)}
@@ -116,7 +117,7 @@ export default function HomePage() {
                 {/* MUAC Guide */}
                 <div className="glass rounded-2xl p-5 border border-gray-100">
                     <div className="flex items-center gap-3 mb-3">
-                        <span className="text-2xl">📏</span>
+                        <Ruler className="w-6 h-6 text-indigo-500" />
                         <h4 className="font-semibold text-gray-800">MUAC Classification</h4>
                     </div>
                     <div className="space-y-3">
