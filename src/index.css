@@ -32,8 +32,8 @@
   --color-mam-orange: #f97316;
   --color-normal-green: #22c55e;
 
-  --font-sans: 'Noto Sans Devanagari', 'Segoe UI', system-ui, -apple-system, sans-serif;
-  --font-heading: 'Poppins', 'Segoe UI', system-ui, sans-serif;
+  --font-sans: 'Inter', 'Noto Sans Devanagari', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-heading: 'Domine', 'Segoe UI', system-ui, sans-serif;
 
   --animate-float: float 3s ease-in-out infinite;
   --animate-pulse-soft: pulse-soft 2s ease-in-out infinite;

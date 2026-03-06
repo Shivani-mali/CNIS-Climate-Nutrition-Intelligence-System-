@@ -61,9 +61,20 @@ export function AuthProvider({ children }) {
 
     const logout = async () => {
         try {
+            if (user && !user.isDemo) {
+                // Clear the role from Firestore so they are reprompted on next login
+                try {
+                    await setDoc(doc(db, 'users', user.uid), {
+                        role: null,
+                        updatedAt: new Date().toISOString()
+                    }, { merge: true });
+                } catch (err) {
+                    console.log('Could not clear role from Firestore on logout');
+                }
+            }
             await signOut(auth);
         } catch (e) {
-            // Demo mode
+            // Demo mode or other signOut error
         }
         setUser(null);
         setRole(null);
