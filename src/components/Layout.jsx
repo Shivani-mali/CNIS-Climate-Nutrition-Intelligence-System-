@@ -22,6 +22,20 @@ export default function Layout() {
         const saved = localStorage.getItem('cnis_dark_mode');
         return saved === 'true';
     });
+    const [isOffline, setIsOffline] = useState(!navigator.onLine);
+
+    useEffect(() => {
+        const handleOnline = () => setIsOffline(false);
+        const handleOffline = () => setIsOffline(true);
+
+        window.addEventListener('online', handleOnline);
+        window.addEventListener('offline', handleOffline);
+
+        return () => {
+            window.removeEventListener('online', handleOnline);
+            window.removeEventListener('offline', handleOffline);
+        };
+    }, []);
 
     // Apply dark mode to html element
     useEffect(() => {
@@ -48,7 +62,7 @@ export default function Layout() {
             {/* Top Header */}
             <header className="sticky top-0 z-40 glass border-b border-gray-200/50 shadow-sm">
                 <div className="flex items-center justify-between px-4 py-3 max-w-7xl mx-auto">
-                    {/* Left: Menu + Logo */}
+                    {/* Left: Menu + Logo + Offline Badge */}
                     <div className="flex items-center gap-3">
                         <button
                             onClick={() => setSidebarOpen(!sidebarOpen)}
@@ -60,11 +74,19 @@ export default function Layout() {
                             </svg>
                         </button>
                         <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigate('/')}>                        
-                            <div className="w-9 h-9 rounded-xl bg-white flex items-center justify-center shadow-sm overflow-hidden">
+                            <div className="w-9 h-9 rounded-xl bg-white flex items-center justify-center shadow-sm overflow-hidden relative">
                                 <img src={logo} alt={t('app_name')} className="w-full h-full object-contain" />
+                                {isOffline && <div className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>}
                             </div>
                             <div>
-                                <h1 className="text-lg font-bold text-clinical-dark leading-tight">{t('app_name')}</h1>
+                                <div className="flex items-center gap-2">
+                                    <h1 className="text-lg font-bold text-clinical-dark leading-tight">{t('app_name')}</h1>
+                                    {isOffline && (
+                                        <span className="bg-red-100 text-red-700 text-[10px] font-bold px-2 py-0.5 rounded-full border border-red-200 shadow-sm animate-fade-in hidden sm:inline-block">
+                                            OFFLINE
+                                        </span>
+                                    )}
+                                </div>
                                 <p className="text-[10px] text-gray-400 -mt-0.5 hidden sm:block">{t('app_full_name')}</p>
                             </div>
                         </div>
