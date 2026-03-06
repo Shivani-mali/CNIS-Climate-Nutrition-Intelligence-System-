@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
+import logo from '../../logo.png';
 
 const roles = [
     {
@@ -49,8 +50,8 @@ export default function RoleSelection() {
             <div className="relative z-10 w-full max-w-lg">
                 {/* Welcome */}
                 <div className="text-center mb-8">
-                    <div className="w-16 h-16 mx-auto mb-4 rounded-2xl gradient-clinical flex items-center justify-center shadow-lg">
-                        <span className="text-3xl">🏥</span>
+                    <div className="w-20 h-20 mx-auto mb-4 rounded-[1.25rem] bg-white/20 backdrop-blur-sm flex items-center justify-center shadow-xl border border-white/40 overflow-hidden">
+                        <img src={logo} alt="CNIS Logo" className="w-full h-full object-contain" />
                     </div>
                     {user?.displayName && (
                         <p className="text-gray-500 mb-2">
