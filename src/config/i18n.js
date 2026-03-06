@@ -93,6 +93,10 @@ const resources = {
             normal_cases: 'Normal Cases',
             recent_reports: 'Recent Reports',
             no_reports: 'No reports yet. Start screening to see results.',
+            reports_subtitle: 'View and manage screening records',
+            download_csv: 'Download CSV',
+            unknown_child: 'Unknown Child',
+            months_short: 'mo',
 
             // Photo validation
             invalid_photo: 'Invalid Photo: Please upload a photo of the child.',
@@ -124,6 +128,10 @@ const resources = {
             rec_green_action: 'Continue regular nutrition and growth monitoring',
             rec_green_feeding: 'Age-appropriate balanced diet',
             rec_green_followup: 'Monthly growth monitoring',
+
+            // Address
+            address: 'Full Address',
+            address_placeholder: 'Enter house no, street, village/city, taluka...',
 
             // Doses Page
             vaccination_schedule: 'Vaccination Schedule',
@@ -294,6 +302,10 @@ const resources = {
             normal_cases: 'सामान्य मामले',
             recent_reports: 'हाल की रिपोर्ट',
             no_reports: 'अभी तक कोई रिपोर्ट नहीं। परिणाम देखने के लिए जाँच शुरू करें।',
+            reports_subtitle: 'जाँच रिकॉर्ड देखें और प्रबंधित करें',
+            download_csv: 'CSV डाउनलोड करें',
+            unknown_child: 'अज्ञात बच्चा',
+            months_short: 'माह',
 
             invalid_photo: 'अमान्य फोटो: कृपया बच्चे की फोटो अपलोड करें।',
             photo_validated: 'फोटो सफलतापूर्वक मान्य।',
@@ -323,6 +335,10 @@ const resources = {
             rec_green_action: 'नियमित पोषण और विकास निगरानी जारी रखें',
             rec_green_feeding: 'उम्र के अनुसार संतुलित आहार',
             rec_green_followup: 'मासिक विकास निगरानी',
+
+            // Address
+            address: 'पूरा पता',
+            address_placeholder: 'मकान नंबर, सड़क, गांव/शहर, तालुका दर्ज करें...',
 
             // Doses Page
             vaccination_schedule: 'टीकाकरण अनुसूची',
@@ -534,6 +550,10 @@ const resources = {
             normal_cases: 'सामान्य प्रकरणे',
             recent_reports: 'अलीकडील अहवाल',
             no_reports: 'अजून कोणतेही अहवाल नाहीत. निकाल पाहण्यासाठी तपासणी सुरू करा.',
+            reports_subtitle: 'तपासणी रेकॉर्ड पहा आणि व्यवस्थापित करा',
+            download_csv: 'CSV डाउनलोड करा',
+            unknown_child: 'अज्ञात मूल',
+            months_short: 'महिने',
 
             invalid_photo: 'अवैध फोटो: कृपया मुलाचा फोटो अपलोड करा.',
             photo_validated: 'फोटो यशस्वीरित्या प्रमाणित.',
@@ -563,6 +583,10 @@ const resources = {
             rec_green_action: 'नियमित पोषण व वाढीचे निरीक्षण चालू ठेवा',
             rec_green_feeding: 'वयानुसार योग्य आणि संतुलित आहार',
             rec_green_followup: 'मासिक वाढीचे निरीक्षण',
+
+            // Address
+            address: 'संपूर्ण पत्ता',
+            address_placeholder: 'घर क्र., रस्ता, गाव/शहर, तालुका प्रविष्ट करा...',
 
             // Doses Page
             vaccination_schedule: 'लसीकरण वेळापत्रक',

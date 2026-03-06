@@ -14,29 +14,91 @@ export function detectSeason(month = new Date().getMonth()) {
     return 'winter';                                       // December - February
 }
 
-/**
- * Get user's location using browser Geolocation API
- */
 export async function detectLocation() {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
+        const fetchAddressFromCoords = async (latitude, longitude) => {
+            let state, city = '', fullAddress = '';
+            try {
+                // First try OpenStreetMap API (Nominatim)
+                // Use zoom=18 to get street/building level detail instead of coarse area
+                const nomRes = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json&zoom=18`);
+                const nomData = await nomRes.json();
+                state = nomData.address?.state || mapCoordsToState(latitude, longitude);
+                city = nomData.address?.city || nomData.address?.town || nomData.address?.village || '';
+                
+                // Construct a cleaner address manually instead of using display_name, which can be overly long or poorly formatted
+                const addr = nomData.address || {};
+                const localArea = addr.road || addr.suburb || addr.neighbourhood || addr.village || '';
+                const cityArea = city || addr.county || addr.state_district || '';
+                
+                const parts = [
+                    addr.house_number, 
+                    localArea, 
+                    cityArea, 
+                    state, 
+                    addr.postcode
+                ].filter(Boolean);
+                
+                fullAddress = parts.join(', ') || nomData.display_name || '';
+                
+                if (city === 'Unknown') city = '';
+                return { state, city, address: fullAddress, latitude, longitude, detected: true };
+            } catch (errNom) {
+                console.warn('Nominatim failed:', errNom);
+                try {
+                    // Fallback to BigDataCloud
+                    const bdcRes = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`);
+                    const bdcData = await bdcRes.json();
+                    state = bdcData.principalSubdivision || mapCoordsToState(latitude, longitude);
+                    city = bdcData.city || bdcData.locality || '';
+                    if (city === 'Unknown') city = '';
+                    fullAddress = city ? `${city}, ${state}` : state;
+                    return { state, city, address: fullAddress, latitude, longitude, detected: true };
+                } catch (errBdc) {
+                    console.warn('BigDataCloud failed:', errBdc);
+                    state = mapCoordsToState(latitude, longitude);
+                    return { state, city: '', address: '', latitude, longitude, detected: true };
+                }
+            }
+        };
+
+        const tryIpFallback = async () => {
+            try {
+                // IP Geolocation Fallback
+                const ipRes = await fetch('https://ipapi.co/json/');
+                const ipData = await ipRes.json();
+                
+                if (ipData && ipData.latitude && ipData.longitude) {
+                    const result = await fetchAddressFromCoords(ipData.latitude, ipData.longitude);
+                    // If OSM failed to find address, use IP data instead
+                    if (!result.address && ipData.city) {
+                        result.address = [ipData.city, ipData.region, ipData.country_name].filter(Boolean).join(', ');
+                        result.city = ipData.city || '';
+                        result.state = ipData.region || 'Maharashtra';
+                    }
+                    resolve(result);
+                    return;
+                }
+            } catch (ipErr) {
+                console.warn('IP Fallback failed:', ipErr);
+                // Final fallback
+            }
+            resolve({ state: 'Maharashtra', city: '', address: '', detected: false });
+        };
+
         if (!navigator.geolocation) {
-            resolve({ state: 'Maharashtra', city: 'Unknown', detected: false });
+            tryIpFallback();
             return;
         }
 
         navigator.geolocation.getCurrentPosition(
             async (position) => {
-                try {
-                    const { latitude, longitude } = position.coords;
-                    // Use reverse geocoding (simplified - maps to Indian states)
-                    const state = mapCoordsToState(latitude, longitude);
-                    resolve({ state, latitude, longitude, detected: true });
-                } catch (err) {
-                    resolve({ state: 'Maharashtra', city: 'Unknown', detected: false });
-                }
+                const result = await fetchAddressFromCoords(position.coords.latitude, position.coords.longitude);
+                resolve(result);
             },
             () => {
-                resolve({ state: 'Maharashtra', city: 'Unknown', detected: false });
+                // User denied or error occurred, try IP based detection
+                tryIpFallback();
             },
             { timeout: 5000 }
         );

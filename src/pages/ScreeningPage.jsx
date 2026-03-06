@@ -50,6 +50,9 @@ export default function ScreeningPage() {
     const [voiceStatus, setVoiceStatus] = useState('');
     const [ageUnit, setAgeUnit] = useState('months');
     const [cameraActive, setCameraActive] = useState(false);
+    const [addressSuggestions, setAddressSuggestions] = useState([]);
+    const [isFetchingAddress, setIsFetchingAddress] = useState(false);
+    const suggestionTimeoutRef = useRef(null);
     const [cameraReady, setCameraReady] = useState(false);
     const [cameraError, setCameraError] = useState(null);
 
@@ -59,17 +62,10 @@ export default function ScreeningPage() {
     const fileInputRef = useRef(null);
     const activeFieldRef = useRef(null);
 
-    // Keep ref in sync
+    // Handle active voice field ref sync
     useEffect(() => {
         activeFieldRef.current = activeVoiceField;
     }, [activeVoiceField]);
-
-    // Try auto-detect location on mount
-    useEffect(() => {
-        detectLocation().then(loc => {
-            setLocationInfo(loc);
-        });
-    }, []);
 
     // Cleanup camera stream on unmount
     useEffect(() => {
@@ -77,6 +73,33 @@ export default function ScreeningPage() {
             stopCamera();
         };
     }, []);
+
+    // Fetch address suggestions from OpenStreetMap Nominatim API
+    const fetchAddressSuggestions = (query) => {
+        if (!query || query.length < 3) {
+            setAddressSuggestions([]);
+            return;
+        }
+
+        if (suggestionTimeoutRef.current) {
+            clearTimeout(suggestionTimeoutRef.current);
+        }
+
+        suggestionTimeoutRef.current = setTimeout(async () => {
+            setIsFetchingAddress(true);
+            try {
+                // Pass the current app language to OpenStreetMap so results reflect it (e.g. Marathi/Hindi/English)
+                const lang = i18n.language === 'en' ? 'en-US,en;q=0.9' : `${i18n.language},en-US;q=0.9,en;q=0.8`;
+                const res = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&addressdetails=1&limit=5&countrycodes=in&accept-language=${encodeURIComponent(lang)}`);
+                const data = await res.json();
+                setAddressSuggestions(data || []);
+            } catch (err) {
+                console.error("Error fetching address suggestions:", err);
+            } finally {
+                setIsFetchingAddress(false);
+            }
+        }, 500); // 500ms debounce
+    };
 
     // ===== VOICE HANDLERS =====
 
@@ -679,6 +702,45 @@ export default function ScreeningPage() {
                                 </select>
                                 <p className="text-xs text-gray-400 mt-1">Auto-detected: {detectSeason() === season ? 'Yes' : 'Manually changed'}</p>
                             </div>
+                            <div className="md:col-span-2 mt-2 relative">
+                                <label className="block text-sm font-medium text-gray-600 mb-1">
+                                    {t('address') || 'Full Address'}
+                                    {isFetchingAddress && <span className="ml-2 text-xs text-clinical-blue animate-pulse">Searching...</span>}
+                                </label>
+                                <textarea
+                                    value={locationInfo.address || ''}
+                                    onChange={(e) => {
+                                        setLocationInfo(prev => ({ ...prev, address: e.target.value }));
+                                        fetchAddressSuggestions(e.target.value);
+                                    }}
+                                    rows="2"
+                                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-clinical-blue focus:ring-2 focus:ring-primary-100 outline-none transition-all bg-white resize-none"
+                                    placeholder={t('address_placeholder') || 'Enter house no, street, village/city, taluka...'}
+                                    id="input-address"
+                                ></textarea>
+                                
+                                {/* Autocomplete Dropdown */}
+                                {addressSuggestions.length > 0 && (
+                                    <ul className="absolute z-10 w-full bg-white border border-gray-200 rounded-xl mt-1 shadow-lg max-h-48 overflow-y-auto">
+                                        {addressSuggestions.map((suggestion, index) => (
+                                            <li 
+                                                key={index} 
+                                                className="px-4 py-3 hover:bg-gray-50 cursor-pointer text-sm text-gray-700 border-b border-gray-100 last:border-0"
+                                                onClick={() => {
+                                                    setLocationInfo(prev => ({ 
+                                                        ...prev, 
+                                                        address: suggestion.display_name,
+                                                        state: suggestion.address?.state || prev.state
+                                                    }));
+                                                    setAddressSuggestions([]);
+                                                }}
+                                            >
+                                                {suggestion.display_name}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                )}
+                            </div>
                         </div>
                     </div>
 
@@ -994,8 +1056,8 @@ export default function ScreeningPage() {
                                 <span className="text-lg">🍽️</span> {t('diet_recommendations')}
                             </h3>
                             <div className="flex items-center gap-3 mb-4">
-                                <span className="px-3 py-1 bg-primary-50 text-clinical-blue text-xs font-medium rounded-full">
-                                    📍 {locationInfo.state || 'Maharashtra'}
+                                <span className="px-3 py-1 bg-primary-50 text-clinical-blue text-xs font-medium rounded-full text-left">
+                                    📍 {locationInfo.address ? `${locationInfo.address}, ` : ''}{(locationInfo.city && locationInfo.city !== 'Unknown') ? `${locationInfo.city}, ` : ''}{locationInfo.state || 'Maharashtra'}
                                 </span>
                                 <span className="px-3 py-1 bg-amber-50 text-amber-700 text-xs font-medium rounded-full">
                                     {season === 'summer' ? '☀️' : season === 'winter' ? '❄️' : season === 'monsoon' ? '🌧️' : '🍂'} {t(season)}

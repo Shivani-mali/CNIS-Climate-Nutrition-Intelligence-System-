@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { exportToCSV } from '../utils/csvExport';
 
 export default function ReportsPage() {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const [reports, setReports] = useState([]);
     const [filter, setFilter] = useState('all');
 
@@ -36,7 +36,8 @@ export default function ReportsPage() {
 
     const formatDate = (dateStr) => {
         try {
-            return new Date(dateStr).toLocaleDateString('en-IN', {
+            const locale = i18n.language === 'en' ? 'en-IN' : `${i18n.language}-IN`;
+            return new Date(dateStr).toLocaleDateString(locale, {
                 day: 'numeric', month: 'short', year: 'numeric',
                 hour: '2-digit', minute: '2-digit'
             });
@@ -48,7 +49,7 @@ export default function ReportsPage() {
             <div className="flex items-center justify-between">
                 <div>
                     <h2 className="text-2xl font-bold text-gray-800">{t('reports')}</h2>
-                    <p className="text-sm text-gray-500">View and manage screening records</p>
+                    <p className="text-sm text-gray-500">{t('reports_subtitle') || 'View and manage screening records'}</p>
                 </div>
                 <button
                     onClick={() => exportToCSV(filtered, 'child_health_records.csv')}
@@ -58,7 +59,7 @@ export default function ReportsPage() {
                     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                     </svg>
-                    <span className="font-semibold text-sm">Download CSV</span>
+                    <span className="font-semibold text-sm">{t('download_csv') || 'Download CSV'}</span>
                 </button>
             </div>
 
@@ -113,16 +114,16 @@ export default function ReportsPage() {
                                         </span>
                                     </div>
                                     <div>
-                                        <h4 className="font-semibold text-gray-800">{report.childName || 'Unknown Child'}</h4>
+                                        <h4 className="font-semibold text-gray-800">{report.childName || t('unknown_child') || 'Unknown Child'}</h4>
                                         <div className="flex items-center gap-2 mt-0.5">
                                             <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${report.result?.zone === 'red' ? 'zone-sam' :
                                                     report.result?.zone === 'orange' ? 'zone-mam' :
                                                         'zone-normal'
                                                 }`}>
-                                                {report.result?.overallStatus || 'Normal'}
+                                                {report.result?.overallStatus === 'Normal' ? t('normal') : report.result?.overallStatus || t('normal')}
                                             </span>
                                             <span className="text-xs text-gray-400">
-                                                {report.gender === 'male' ? '👦' : '👧'} {report.ageMonths}mo
+                                                {report.gender === 'male' ? '👦' : '👧'} {report.ageMonths}{t('months_short') || 'mo'}
                                             </span>
                                         </div>
                                     </div>
@@ -140,13 +141,13 @@ export default function ReportsPage() {
                                 <div className="flex gap-4 text-xs text-gray-500">
                                     {report.heightCm && <span>📏 {report.heightCm}cm</span>}
                                     {report.weightKg && <span>⚖️ {report.weightKg}kg</span>}
-                                    {report.location?.state && <span>📍 {report.location.state}</span>}
+                                    {report.location?.state && <span>📍 {report.location.address ? `${report.location.address}, ` : ''}{(report.location.city && report.location.city !== 'Unknown') ? `${report.location.city}, ` : ''}{report.location.state}</span>}
                                 </div>
                                 <button
                                     onClick={() => deleteReport(report.id)}
                                     className="text-xs text-red-400 hover:text-red-600 transition-colors px-2 py-1 rounded-lg hover:bg-red-50"
                                 >
-                                    🗑️ Delete
+                                    🗑️ {t('delete') || 'Delete'}
                                 </button>
                             </div>
                         </div>
