@@ -48,6 +48,7 @@ export default function ScreeningPage() {
     const [saved, setSaved] = useState(false);
     const [activeVoiceField, setActiveVoiceField] = useState(null);
     const [voiceStatus, setVoiceStatus] = useState('');
+    const [isReadingResults, setIsReadingResults] = useState(false);
     const [ageUnit, setAgeUnit] = useState('months');
     const [cameraActive, setCameraActive] = useState(false);
     const [cameraReady, setCameraReady] = useState(false);
@@ -57,6 +58,8 @@ export default function ScreeningPage() {
     const canvasRef = useRef(null);
     const streamRef = useRef(null);
     const fileInputRef = useRef(null);
+    const readingTimeoutsRef = useRef([]);
+    const readingCancelledRef = useRef(false);
     const activeFieldRef = useRef(null);
 
     // Keep ref in sync
@@ -389,6 +392,223 @@ export default function ScreeningPage() {
         const statusText = t(screeningResult.muacResult?.label || 'normal');
         const zoneText = t(screeningResult.muacResult?.zoneLabel || 'green_zone');
         speak(`${t('result')}: ${statusText}. ${zoneText}`, getTTSLang(i18n.language));
+    };
+
+    // ===== READ RESULTS ALOUD =====
+    const stopReadingResults = () => {
+        readingCancelledRef.current = true;
+        // Stop Web Speech API
+        window.speechSynthesis?.cancel();
+        // Stop Google Translate TTS audio
+        if (readingTimeoutsRef.current._stopAudio) {
+            readingTimeoutsRef.current._stopAudio();
+        }
+        readingTimeoutsRef.current.forEach(id => clearTimeout(id));
+        readingTimeoutsRef.current = [];
+        setIsReadingResults(false);
+    };
+
+    const readResultsAloud = () => {
+        if (isReadingResults) {
+            stopReadingResults();
+            return;
+        }
+
+        if (!result || !window.speechSynthesis) return;
+
+        readingCancelledRef.current = false;
+        setIsReadingResults(true);
+        window.speechSynthesis.cancel();
+
+        const lang = getTTSLang(i18n.language);
+        const sections = [];
+
+        // Section 1: Status
+        const statusLabel = t(result.muacResult?.label || 'normal');
+        const zoneLabel = t(result.muacResult?.zoneLabel || 'green_zone');
+        const statusText = i18n.language === 'hi'
+            ? `परिणाम: ${statusLabel}। ${zoneLabel}।`
+            : i18n.language === 'mr'
+                ? `निकाल: ${statusLabel}। ${zoneLabel}।`
+                : `Result: ${statusLabel}. ${zoneLabel}.`;
+        sections.push(statusText);
+
+        // Section 2: MUAC value
+        if (formData.muacCm) {
+            const muacText = i18n.language === 'hi'
+                ? `MUAC माप: ${formData.muacCm} सेंटीमीटर। स्थिति: ${result.overallStatus || ''}`
+                : i18n.language === 'mr'
+                    ? `MUAC माप: ${formData.muacCm} सेंटीमीटर। स्थिती: ${result.overallStatus || ''}`
+                    : `MUAC measurement: ${formData.muacCm} centimeters. Status: ${result.overallStatus || ''}`;
+            sections.push(muacText);
+        }
+
+        // Section 3: Danger signs
+        if (dangerSigns.length > 0) {
+            const dangerIntro = i18n.language === 'hi'
+                ? 'चेतावनी! खतरे के संकेत पाए गए:'
+                : i18n.language === 'mr'
+                    ? 'चेतावणी! धोक्याची चिन्हे आढळली:'
+                    : 'Warning! Danger signs detected:';
+            const signsList = dangerSigns.map(s => `${s.sign}. ${s.action}`).join('. ');
+            sections.push(`${dangerIntro} ${signsList}`);
+
+            const seekMedical = i18n.language === 'hi'
+                ? 'कृपया तुरंत चिकित्सा सहायता लें।'
+                : i18n.language === 'mr'
+                    ? 'कृपया त्वरित वैद्यकीय मदत घ्या।'
+                    : 'Please seek immediate medical attention.';
+            sections.push(seekMedical);
+        }
+
+        // Section 4: Action plan
+        if (result.recommendations) {
+            const actionIntro = i18n.language === 'hi'
+                ? 'कार्य योजना:'
+                : i18n.language === 'mr'
+                    ? 'कृती योजना:'
+                    : 'Action plan:';
+            const actionText = t(result.recommendations.action);
+            const feedingText = `${t('feeding')}: ${t(result.recommendations.feeding)}`;
+            const followUpText = `${t('follow_up')}: ${t(result.recommendations.followUp)}`;
+            sections.push(`${actionIntro} ${actionText}. ${feedingText}. ${followUpText}.`);
+        }
+
+        // Section 5: Diet recommendations
+        if (dietInfo && dietInfo.foods?.length > 0) {
+            const dietIntro = i18n.language === 'hi'
+                ? 'आहार सिफारिशें:'
+                : i18n.language === 'mr'
+                    ? 'आहार शिफारसी:'
+                    : 'Diet recommendations:';
+            const foodsList = dietInfo.foods.slice(0, 5).map(f => t(f.name)).join(', ');
+            sections.push(`${dietIntro} ${foodsList}.`);
+
+            if (dietInfo.tips?.length > 0) {
+                const tipsIntro = i18n.language === 'hi'
+                    ? 'सुझाव:'
+                    : i18n.language === 'mr'
+                        ? 'सूचना:'
+                        : 'Tips:';
+                const tipsList = dietInfo.tips.slice(0, 3).map(tip => t(tip)).join('. ');
+                sections.push(`${tipsIntro} ${tipsList}.`);
+            }
+        }
+
+        // Clean all sections
+        const cleanSections = sections.map(s => 
+            s.replace(/[✅⚠️❌🚨🏥📋🍽️💡🥛🥚]/g, '').trim()
+        );
+
+        // For English, use Web Speech API (works fine)
+        if (i18n.language === 'en') {
+            const fullText = cleanSections.join('. ');
+            const utterance = new SpeechSynthesisUtterance(fullText);
+            utterance.lang = lang;
+            utterance.rate = 0.85;
+            utterance.pitch = 1;
+            utterance.volume = 1;
+
+            const voices = window.speechSynthesis.getVoices();
+            const matchingVoice = voices.find(v => v.lang.startsWith('en'));
+            if (matchingVoice) utterance.voice = matchingVoice;
+
+            utterance.onend = () => setIsReadingResults(false);
+            utterance.onerror = () => setIsReadingResults(false);
+
+            window.speechSynthesis.speak(utterance);
+            return;
+        }
+
+        // For Hindi/Marathi: Use Google Translate TTS via Vite proxy
+        const ttsLang = i18n.language === 'hi' ? 'hi' : 'mr';
+        const fullText = cleanSections.join('। ');
+        
+        console.log('[TTS] Language:', ttsLang, '| Text length:', fullText.length);
+        console.log('[TTS] Text preview:', fullText.substring(0, 100));
+
+        // Split into chunks of ~150 chars for Google TTS
+        const chunks = [];
+        const sentences = fullText.split(/[।.]/);
+        let current = '';
+        for (const sentence of sentences) {
+            const trimmed = sentence.trim();
+            if (!trimmed) continue;
+            if ((current + trimmed).length > 150 && current) {
+                chunks.push(current.trim());
+                current = trimmed;
+            } else {
+                current += (current ? '। ' : '') + trimmed;
+            }
+        }
+        if (current.trim()) chunks.push(current.trim());
+
+        console.log('[TTS] Split into', chunks.length, 'chunks');
+
+        let currentChunkIndex = 0;
+        let currentAudio = null;
+
+        readingTimeoutsRef.current._stopAudio = () => {
+            if (currentAudio) {
+                currentAudio.pause();
+                currentAudio = null;
+            }
+        };
+
+        const playNextChunk = async () => {
+            if (readingCancelledRef.current || currentChunkIndex >= chunks.length) {
+                console.log('[TTS] Done reading or cancelled');
+                setIsReadingResults(false);
+                return;
+            }
+
+            const chunk = chunks[currentChunkIndex];
+            console.log('[TTS] Playing chunk', currentChunkIndex + 1, '/', chunks.length, ':', chunk.substring(0, 50));
+
+            try {
+                const url = `/api/tts?ie=UTF-8&tl=${ttsLang}&client=tw-ob&q=${encodeURIComponent(chunk)}`;
+                console.log('[TTS] Fetching:', url.substring(0, 80));
+
+                const response = await fetch(url);
+                console.log('[TTS] Response status:', response.status, 'type:', response.headers.get('content-type'));
+
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+                const blob = await response.blob();
+                console.log('[TTS] Blob size:', blob.size, 'type:', blob.type);
+
+                const blobUrl = URL.createObjectURL(blob);
+                const audio = new Audio(blobUrl);
+                currentAudio = audio;
+
+                audio.onended = () => {
+                    console.log('[TTS] Chunk', currentChunkIndex + 1, 'finished');
+                    URL.revokeObjectURL(blobUrl);
+                    if (readingCancelledRef.current) {
+                        setIsReadingResults(false);
+                        return;
+                    }
+                    currentChunkIndex++;
+                    const pauseId = setTimeout(playNextChunk, 600);
+                    readingTimeoutsRef.current.push(pauseId);
+                };
+
+                audio.onerror = (e) => {
+                    console.error('[TTS] Audio error:', e);
+                    URL.revokeObjectURL(blobUrl);
+                    currentChunkIndex++;
+                    setTimeout(playNextChunk, 300);
+                };
+
+                await audio.play();
+                console.log('[TTS] Playing audio...');
+            } catch (err) {
+                console.error('[TTS] Error:', err);
+                setIsReadingResults(false);
+            }
+        };
+
+        playNextChunk();
     };
 
     // Save
@@ -942,6 +1162,31 @@ export default function ScreeningPage() {
                             </div>
                         </div>
                     </div>
+
+                    {/* Read Results Aloud Button */}
+                    <button
+                        onClick={readResultsAloud}
+                        className={`w-full py-3.5 rounded-2xl font-bold text-base transition-all flex items-center justify-center gap-2 ${
+                            isReadingResults
+                                ? 'bg-red-100 text-red-600 border-2 border-red-300 shadow-md'
+                                : 'bg-indigo-50 text-indigo-700 border-2 border-indigo-200 hover:bg-indigo-100 hover:border-indigo-300 hover:shadow-md active:scale-[0.98]'
+                        }`}
+                        id="read-results-btn"
+                    >
+                        {isReadingResults ? (
+                            <>
+                                <span className="relative flex h-3 w-3">
+                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                                    <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                                </span>
+                                ⏹ {i18n.language === 'hi' ? 'पढ़ना बंद करें' : i18n.language === 'mr' ? 'वाचणे थांबवा' : 'Stop Reading'}
+                            </>
+                        ) : (
+                            <>
+                                🔊 {i18n.language === 'hi' ? 'परिणाम सुनें' : i18n.language === 'mr' ? 'निकाल ऐका' : 'Read Results Aloud'}
+                            </>
+                        )}
+                    </button>
 
                     {/* Danger Signs */}
                     {dangerSigns.length > 0 && (
