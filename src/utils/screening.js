@@ -198,23 +198,23 @@ function getRecommendations(status, zone) {
     switch (zone) {
         case 'red':
             return {
-                action: 'URGENT: Refer to nearest health facility immediately',
-                feeding: 'Therapeutic feeding (F-75/F-100 as per protocol)',
-                followUp: 'Daily monitoring required',
+                action: 'rec_red_action',
+                feeding: 'rec_red_feeding',
+                followUp: 'rec_red_followup',
                 referral: true
             };
         case 'orange':
             return {
-                action: 'Enroll in supplementary feeding program',
-                feeding: 'High-energy, nutrient-dense foods with increased frequency',
-                followUp: 'Weekly monitoring and weight check',
+                action: 'rec_orange_action',
+                feeding: 'rec_orange_feeding',
+                followUp: 'rec_orange_followup',
                 referral: false
             };
         default:
             return {
-                action: 'Continue regular nutrition and growth monitoring',
-                feeding: 'Age-appropriate balanced diet',
-                followUp: 'Monthly growth monitoring',
+                action: 'rec_green_action',
+                feeding: 'rec_green_feeding',
+                followUp: 'rec_green_followup',
                 referral: false
             };
     }

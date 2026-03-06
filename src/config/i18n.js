@@ -108,6 +108,22 @@ const resources = {
             back: 'Back',
             next: 'Next',
             language: 'Language',
+            
+            // Action Plan
+            action_plan: 'Action Plan',
+            feeding: 'Feeding',
+            follow_up: 'Follow-up',
+
+            // Recommendations
+            rec_red_action: 'URGENT: Refer to nearest health facility immediately',
+            rec_red_feeding: 'Therapeutic feeding (F-75/F-100 as per protocol)',
+            rec_red_followup: 'Daily monitoring required',
+            rec_orange_action: 'Enroll in supplementary feeding program',
+            rec_orange_feeding: 'High-energy, nutrient-dense foods with increased frequency',
+            rec_orange_followup: 'Weekly monitoring and weight check',
+            rec_green_action: 'Continue regular nutrition and growth monitoring',
+            rec_green_feeding: 'Age-appropriate balanced diet',
+            rec_green_followup: 'Monthly growth monitoring',
 
             // Doses Page
             vaccination_schedule: 'Vaccination Schedule',
@@ -142,6 +158,11 @@ const resources = {
             je_desc: 'Japanese Encephalitis',
             pcv_desc: 'Pneumococcal Conjugate Vaccine',
             dpt_desc: 'Diphtheria, Pertussis, Tetanus',
+            // Diet Recommendations & UI
+            tips: 'Tips',
+            saved: 'Saved',
+            new: 'New',
+
 
             // Importance
             bcg_imp: 'Protects against severe forms of Tuberculosis (TB).',
@@ -286,6 +307,22 @@ const resources = {
             back: 'वापस',
             next: 'आगे',
             language: 'भाषा',
+            
+            // Action Plan
+            action_plan: 'कार्य योजना',
+            feeding: 'खिलाना (आहार)',
+            follow_up: 'अनुवर्ती कार्रवाई (फॉलो-अप)',
+
+            // Recommendations
+            rec_red_action: 'तत्काल: तुरंत निकटतम स्वास्थ्य सुविधा से संपर्क करें',
+            rec_red_feeding: 'चिकित्सीय आहार (प्रोटोकॉल के अनुसार F-75/F-100)',
+            rec_red_followup: 'दैनिक निगरानी आवश्यक है',
+            rec_orange_action: 'पूरक पोषण कार्यक्रम में नामांकन करें',
+            rec_orange_feeding: 'अधिक आवृत्ति के साथ उच्च ऊर्जा, पोषक तत्वों से भरपूर खाद्य पदार्थ',
+            rec_orange_followup: 'साप्ताहिक निगरानी और वजन की जाँच',
+            rec_green_action: 'नियमित पोषण और विकास निगरानी जारी रखें',
+            rec_green_feeding: 'उम्र के अनुसार संतुलित आहार',
+            rec_green_followup: 'मासिक विकास निगरानी',
 
             // Doses Page
             vaccination_schedule: 'टीकाकरण अनुसूची',
@@ -320,6 +357,52 @@ const resources = {
             je_desc: 'जापानी एन्सेफलाइटिस',
             pcv_desc: 'न्यूमोकोकल कंजुगेट वैक्सीन',
             dpt_desc: 'डिफ्थीरिया, पर्टुसिस, टेटनस',
+            // Diet Recommendations & UI
+            tips: 'सुझाव',
+            saved: 'सहेजा गया',
+            new: 'नया',
+            '⚠️ Child needs supplementary feeding program': '⚠️ बच्चे को पूरक पोषण (आहार) कार्यक्रम की आवश्यकता है',
+            '📋 Weekly monitoring of weight and MUAC required': '📋 वजन और MUAC की साप्ताहिक निगरानी आवश्यक है',
+            '🥛 Increase calorie-dense foods in diet': '🥛 आहार में उच्च कैलोरी वाले खाद्य पदार्थ बढ़ाएं',
+            '🥚 Add eggs, milk, and nuts if available': '🥚 यदि उपलब्ध हो तो अंडे, दूध और मेवे शामिल करें',
+
+            'Buttermilk (Chaas)': 'छाछ (मट्ठा)',
+            'Cooling, probiotic, easy to digest': 'ठंडा, प्रोबायोटिक, पचने में आसान',
+            'Calcium, Protein, B12': 'कैल्शियम, प्रोटीन, विटामिन बी12',
+
+            'Jowar Bhakri': 'ज्वार की भाकरी (रोटी)',
+            'High fiber, gluten-free energy': 'उच्च फाइबर, ग्लूटेन-मुक्त ऊर्जा',
+            'Iron, Fiber, B-vitamins': 'आयरन, फाइबर, बी-विटामिन',
+
+            'Sprouted Moong': 'अंकुरित मूंग',
+            'High protein, easy to digest': 'उच्च प्रोटीन, पचने में आसान',
+            'Protein, Folate, Iron': 'प्रोटीन, फोलेट, आयरन',
+
+            'Drumstick (Shevga)': 'सहजन (मुनगा)',
+            'Nutrient-dense, anti-inflammatory': 'पोषक तत्वों से भरपूर, सूजनरोधी',
+            'Vitamin C, Calcium, Iron': 'विटामिन सी, कैल्शियम, आयरन',
+
+            'Kokum Sherbet': 'कोकम शर्बत',
+            'Cooling, aids digestion': 'ठंडा, पाचन में सहायक',
+            'Antioxidants, Vitamin C': 'एंटीऑक्सीडेंट, विटामिन सी',
+
+            'Watermelon (Kalingad)': 'तरबूज',
+            'Hydrating, natural sugars': 'हाइड्रेटिंग (नमी), प्राकृतिक शर्करा',
+            'Vitamin A, Lycopene': 'विटामिन ए, लाइकोपीन',
+
+            'Cucumber Raita': 'खीरे का रायता',
+            'Cooling, probiotic': 'ठंडा, प्रोबायोटिक',
+            'Calcium, Protein': 'कैल्शियम, प्रोटीन',
+
+            'Sattu Drink': 'सत्तू ड्रिंक',
+            'Instant energy, cooling': 'तुरंत ऊर्जा, ठंडा',
+            'Protein, Iron, Fiber': 'प्रोटीन, आयरन, फाइबर',
+
+            'Increase fluid intake - offer buttermilk, coconut water frequently': 'तरल पदार्थ का सेवन बढ़ाएं - बार-बार छाछ, नारियल पानी दें',
+            'Avoid heavy, fried foods during peak summer': 'तेज गर्मी के दौरान भारी, तले हुए खाद्य पदार्थों से बचें',
+            'Add a pinch of salt and sugar to drinking water to prevent dehydration': 'डिहाइड्रेशन से बचने के लिए पीने के पानी में एक चुटकी नमक और चीनी मिलाएं',
+            'Feed small, frequent meals rather than large ones': 'बड़े भोजन के बजाय छोटे, बार-बार भोजन कराएं',
+
 
             // Importance
             bcg_imp: 'टीबी के गंभीर रूपों से बचाता है।',
@@ -464,6 +547,22 @@ const resources = {
             back: 'मागे',
             next: 'पुढे',
             language: 'भाषा',
+            
+            // Action Plan
+            action_plan: 'कृती योजना',
+            feeding: 'आहार',
+            follow_up: 'फॉलो-अप',
+
+            // Recommendations
+            rec_red_action: 'तात्काळ: ताबडतोब जवळच्या आरोग्य केंद्राशी संपर्क साधा',
+            rec_red_feeding: 'उपचारात्मक आहार (प्रोटोकॉलनुसार F-75/F-100)',
+            rec_red_followup: 'दररोज निरीक्षण करणे आवश्यक आहे',
+            rec_orange_action: 'पूरक पोषण कार्यक्रमात नोंदणी करा',
+            rec_orange_feeding: 'अधिक वेळा उच्च ऊर्जा, पोषक तत्वांनी युक्त अन्न द्या',
+            rec_orange_followup: 'आठवडाभरात वजन तपासणी आणि निरीक्षण',
+            rec_green_action: 'नियमित पोषण व वाढीचे निरीक्षण चालू ठेवा',
+            rec_green_feeding: 'वयानुसार योग्य आणि संतुलित आहार',
+            rec_green_followup: 'मासिक वाढीचे निरीक्षण',
 
             // Doses Page
             vaccination_schedule: 'लसीकरण वेळापत्रक',
@@ -498,6 +597,52 @@ const resources = {
             je_desc: 'जपानी एन्सेफलायटीस',
             pcv_desc: 'न्यूमोकोकल कॉन्जुगेट लस',
             dpt_desc: 'घटसर्प, डांग्या खोकला, धनुर्वात',
+            // Diet Recommendations & UI
+            tips: 'टिपा',
+            saved: 'सेव्ह केले',
+            new: 'नवीन',
+            '⚠️ Child needs supplementary feeding program': '⚠️ मुलाला पूरक आहार कार्यक्रमाची आवश्यकता आहे',
+            '📋 Weekly monitoring of weight and MUAC required': '📋 वजन आणि MUAC चे साप्ताहिक निरीक्षण आवश्यक आहे',
+            '🥛 Increase calorie-dense foods in diet': '🥛 आहारात उच्च-कॅलरीयुक्त अन्न वाढवा',
+            '🥚 Add eggs, milk, and nuts if available': '🥚 उपलब्ध असल्यास अंडी, दूध आणि सुकामेवा द्या',
+
+            'Buttermilk (Chaas)': 'ताक (छास)',
+            'Cooling, probiotic, easy to digest': 'थंड, प्रोबायोटिक, पचायला सोपे',
+            'Calcium, Protein, B12': 'कॅल्शियम, प्रथिने, B12',
+
+            'Jowar Bhakri': 'ज्वारीची भाकरी',
+            'High fiber, gluten-free energy': 'उच्च फायबर, ग्लूटेन-मुक्त ऊर्जा',
+            'Iron, Fiber, B-vitamins': 'लोह, फायबर, बी-जीवनसत्त्वे',
+
+            'Sprouted Moong': 'मोड आलेले मूग',
+            'High protein, easy to digest': 'उच्च प्रथिने, पचायला सोपे',
+            'Protein, Folate, Iron': 'प्रथिने, फोलेट, लोह',
+
+            'Drumstick (Shevga)': 'शेवगा',
+            'Nutrient-dense, anti-inflammatory': 'पोषक तत्वांनी समृद्ध, दाहक-विरोधी',
+            'Vitamin C, Calcium, Iron': 'क जीवनसत्व, कॅल्शियम, लोह',
+
+            'Kokum Sherbet': 'कोकम सरबत',
+            'Cooling, aids digestion': 'थंड, पचन सुधारते',
+            'Antioxidants, Vitamin C': 'अँटिऑक्सिडंट्स, क जीवनसत्व',
+
+            'Watermelon (Kalingad)': 'कलिंगड',
+            'Hydrating, natural sugars': 'हायड्रेटिंग, नैसर्गिक साखरा',
+            'Vitamin A, Lycopene': 'अ जीवनसत्व, लायकोपीन',
+
+            'Cucumber Raita': 'काकडीचा रायता',
+            'Cooling, probiotic': 'थंड, प्रोबायोटिक',
+            'Calcium, Protein': 'कॅल्शियम, प्रथिने',
+
+            'Sattu Drink': 'सत्तूचे पेय',
+            'Instant energy, cooling': 'त्वरित ऊर्जा, थंड',
+            'Protein, Iron, Fiber': 'प्रथिने, लोह, फायबर',
+
+            'Increase fluid intake - offer buttermilk, coconut water frequently': 'द्रवपदार्थाचे सेवन वाढवा - वारंवार ताक, नारळपाणी द्या',
+            'Avoid heavy, fried foods during peak summer': 'कडक उन्हाळ्यात जड, तळलेले अन्न टाळा',
+            'Add a pinch of salt and sugar to drinking water to prevent dehydration': 'डिहायड्रेशन टाळण्यासाठी पिण्याच्या पाण्यात चिमूटभर मीठ आणि साखर घाला',
+            'Feed small, frequent meals rather than large ones': 'एकाच वेळी जास्त खाण्यापेक्षा थोडे-थोडे आणि वारंवार खाऊ घाला',
+
 
             // Importance
             bcg_imp: 'क्षयरोगाच्या गंभीर स्वरूपापासून संरक्षण करते.',

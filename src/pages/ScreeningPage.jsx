@@ -971,17 +971,17 @@ export default function ScreeningPage() {
                     {result.recommendations && (
                         <div className="glass rounded-2xl p-5 border border-gray-100">
                             <h3 className="font-semibold text-gray-700 mb-3 flex items-center gap-2">
-                                <span className="text-lg">📋</span> Action Plan
+                                <span className="text-lg">📋</span> {t('action_plan')}
                             </h3>
                             <div className="space-y-2">
                                 <div className="p-3 bg-primary-50 rounded-xl">
-                                    <p className="font-medium text-clinical-dark text-sm">{result.recommendations.action}</p>
+                                    <p className="font-medium text-clinical-dark text-sm">{t(result.recommendations.action)}</p>
                                 </div>
                                 <div className="p-3 bg-gray-50 rounded-xl">
-                                    <p className="text-sm text-gray-600"><span className="font-medium">Feeding:</span> {result.recommendations.feeding}</p>
+                                    <p className="text-sm text-gray-600"><span className="font-medium">{t('feeding')}:</span> {t(result.recommendations.feeding)}</p>
                                 </div>
                                 <div className="p-3 bg-gray-50 rounded-xl">
-                                    <p className="text-sm text-gray-600"><span className="font-medium">Follow-up:</span> {result.recommendations.followUp}</p>
+                                    <p className="text-sm text-gray-600"><span className="font-medium">{t('follow_up')}:</span> {t(result.recommendations.followUp)}</p>
                                 </div>
                             </div>
                         </div>
@@ -1005,7 +1005,7 @@ export default function ScreeningPage() {
                             {dietInfo.urgentAdvice && (
                                 <div className="mb-4 space-y-1">
                                     {dietInfo.urgentAdvice.map((advice, i) => (
-                                        <p key={i} className="text-sm text-red-700 bg-red-50 px-3 py-1.5 rounded-lg">{advice}</p>
+                                        <p key={i} className="text-sm text-red-700 bg-red-50 px-3 py-1.5 rounded-lg">{t(advice)}</p>
                                     ))}
                                 </div>
                             )}
@@ -1015,9 +1015,9 @@ export default function ScreeningPage() {
                                     <div key={i} className="flex items-start gap-3 p-3 bg-gray-50 rounded-xl hover:bg-primary-50 transition-colors">
                                         <span className="text-2xl">{food.emoji}</span>
                                         <div>
-                                            <p className="font-semibold text-gray-800 text-sm">{food.name}</p>
-                                            <p className="text-xs text-gray-500">{food.benefit}</p>
-                                            <p className="text-xs text-clinical-blue mt-0.5">{food.nutrients}</p>
+                                            <p className="font-semibold text-gray-800 text-sm">{t(food.name)}</p>
+                                            <p className="text-xs text-gray-500">{t(food.benefit)}</p>
+                                            <p className="text-xs text-clinical-blue mt-0.5">{t(food.nutrients)}</p>
                                         </div>
                                     </div>
                                 ))}
@@ -1025,11 +1025,11 @@ export default function ScreeningPage() {
 
                             {dietInfo.tips && (
                                 <div className="mt-4">
-                                    <p className="text-sm font-medium text-gray-600 mb-2">💡 Tips:</p>
+                                    <p className="text-sm font-medium text-gray-600 mb-2">💡 {t('tips')}:</p>
                                     <ul className="space-y-1">
                                         {dietInfo.tips.map((tip, i) => (
                                             <li key={i} className="text-xs text-gray-500 pl-4 relative before:content-['•'] before:absolute before:left-0 before:text-clinical-blue">
-                                                {tip}
+                                                {t(tip)}
                                             </li>
                                         ))}
                                     </ul>
@@ -1052,7 +1052,7 @@ export default function ScreeningPage() {
                             {isSaving ? (
                                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
                             ) : saved ? (
-                                <>✅ Saved</>
+                                <>✅ {t('saved')}</>
                             ) : (
                                 <>💾 {t('save_data')}</>
                             )}
@@ -1073,7 +1073,7 @@ export default function ScreeningPage() {
                             }}
                             className="px-6 py-3 rounded-2xl font-bold bg-gray-100 text-gray-600 hover:bg-gray-200 transition-all"
                         >
-                            New
+                            {t('new')}
                         </button>
                     </div>
                 </div>
