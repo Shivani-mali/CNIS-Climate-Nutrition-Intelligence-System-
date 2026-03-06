@@ -1,0 +1,296 @@
+import { useTranslation } from 'react-i18next';
+import { useState } from 'react';
+
+const VACCINE_SCHEDULE = [
+    {
+        ageKey: 'age_at_birth',
+        vaccines: [
+            { 
+                name: 'BCG', 
+                descKey: 'bcg_desc', 
+                routeKey: 'route_id',
+                impKey: 'bcg_imp',
+                riskKey: 'bcg_risk'
+            },
+            { 
+                name: 'OPV-0', 
+                descKey: 'opv_desc', 
+                routeKey: 'route_oral',
+                impKey: 'opv_imp',
+                riskKey: 'opv0_risk'
+            },
+            { 
+                name: 'Hep-B', 
+                descKey: 'hepb_desc', 
+                routeKey: 'route_im',
+                impKey: 'hepb_imp',
+                riskKey: 'hepb_risk'
+            }
+        ]
+    },
+    {
+        ageKey: 'age_6_weeks',
+        vaccines: [
+            { 
+                name: 'OPV-1', 
+                descKey: 'opv_desc', 
+                routeKey: 'route_oral',
+                impKey: 'opv1_imp',
+                riskKey: 'opv1_risk'
+            },
+            { 
+                name: 'Pentavalent-1', 
+                descKey: 'penta_desc', 
+                routeKey: 'route_im',
+                impKey: 'penta_imp',
+                riskKey: 'penta_risk'
+            },
+            { 
+                name: 'Rotavirus-1', 
+                descKey: 'rota_desc', 
+                routeKey: 'route_oral',
+                impKey: 'rota_imp',
+                riskKey: 'rota_risk'
+            },
+            { 
+                name: 'fIPV-1', 
+                descKey: 'fipv_desc', 
+                routeKey: 'route_id',
+                impKey: 'fipv_imp',
+                riskKey: 'fipv_risk'
+            }
+        ]
+    },
+    {
+        ageKey: 'age_10_weeks',
+        vaccines: [
+            { 
+                name: 'OPV-2', 
+                descKey: 'opv_desc', 
+                routeKey: 'route_oral',
+                impKey: 'opv2_imp',
+                riskKey: 'opv2_risk'
+            },
+            { 
+                name: 'Pentavalent-2', 
+                descKey: 'penta_desc', 
+                routeKey: 'route_im',
+                impKey: 'penta2_imp',
+                riskKey: 'penta2_risk'
+            },
+            { 
+                name: 'Rotavirus-2', 
+                descKey: 'rota_desc', 
+                routeKey: 'route_oral',
+                impKey: 'rota2_imp',
+                riskKey: 'rota2_risk'
+            }
+        ]
+    },
+    {
+        ageKey: 'age_14_weeks',
+        vaccines: [
+            { 
+                name: 'OPV-3', 
+                descKey: 'opv_desc', 
+                routeKey: 'route_oral',
+                impKey: 'opv3_imp',
+                riskKey: 'opv3_risk'
+            },
+            { 
+                name: 'Pentavalent-3', 
+                descKey: 'penta_desc', 
+                routeKey: 'route_im',
+                impKey: 'penta3_imp',
+                riskKey: 'penta3_risk'
+            },
+            { 
+                name: 'Rotavirus-3', 
+                descKey: 'rota_desc', 
+                routeKey: 'route_oral',
+                impKey: 'rota3_imp',
+                riskKey: 'rota3_risk'
+            },
+            { 
+                name: 'fIPV-2', 
+                descKey: 'fipv_desc', 
+                routeKey: 'route_id',
+                impKey: 'fipv2_imp',
+                riskKey: 'fipv2_risk'
+            }
+        ]
+    },
+    {
+        ageKey: 'age_9_to_12_months',
+        vaccines: [
+            { 
+                name: 'Measles/MR-1', 
+                descKey: 'mr_desc', 
+                routeKey: 'route_sc',
+                impKey: 'mr_imp',
+                riskKey: 'mr_risk'
+            },
+            { 
+                name: 'JE-1', 
+                descKey: 'je_desc', 
+                routeKey: 'route_sc',
+                impKey: 'je_imp',
+                riskKey: 'je_risk'
+            },
+            { 
+                name: 'PCV Booster', 
+                descKey: 'pcv_desc', 
+                routeKey: 'route_im',
+                impKey: 'pcv_imp',
+                riskKey: 'pcv_risk'
+            }
+        ]
+    },
+    {
+        ageKey: 'age_16_to_24_months',
+        vaccines: [
+            { 
+                name: 'Measles/MR-2', 
+                descKey: 'mr_desc', 
+                routeKey: 'route_sc',
+                impKey: 'mr2_imp',
+                riskKey: 'mr2_risk'
+            },
+            { 
+                name: 'JE-2', 
+                descKey: 'je_desc', 
+                routeKey: 'route_sc',
+                impKey: 'je2_imp',
+                riskKey: 'je2_risk'
+            },
+            { 
+                name: 'DPT Booster-1', 
+                descKey: 'dpt_desc', 
+                routeKey: 'route_im',
+                impKey: 'dpt_imp',
+                riskKey: 'dpt_risk'
+            },
+            { 
+                name: 'OPV Booster', 
+                descKey: 'opv_desc', 
+                routeKey: 'route_oral',
+                impKey: 'opv_booster_imp',
+                riskKey: 'opv_booster_risk'
+            }
+        ]
+    }
+];
+
+export default function DosesPage() {
+    const { t } = useTranslation();
+    const [expandedAge, setExpandedAge] = useState('age_at_birth');
+
+    return (
+        <div className="space-y-6 slide-up">
+            <div className="glass rounded-3xl p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-primary-100 rounded-full blur-3xl opacity-50 -translate-y-1/2 translate-x-1/4"></div>
+                <div className="relative z-10 w-full">
+                    <div className="flex items-center gap-4 mb-4">
+                        <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center shadow-sm text-2xl">
+                            💉
+                        </div>
+                        <div>
+                            <h2 className="text-2xl font-bold text-clinical-dark">{t('vaccination_schedule')}</h2>
+                            <p className="text-gray-500">{t('vaccination_subtitle')}</p>
+                        </div>
+                    </div>
+
+                    <div className="grid gap-4 mt-8">
+                        {VACCINE_SCHEDULE.map((schedule) => (
+                            <div 
+                                key={schedule.ageKey}
+                                className={`rounded-2xl border transition-all duration-300 overflow-hidden ${
+                                    expandedAge === schedule.ageKey 
+                                        ? 'border-clinical-blue bg-white shadow-md' 
+                                        : 'border-gray-200 bg-gray-50/50 hover:bg-white cursor-pointer'
+                                }`}
+                                onClick={() => setExpandedAge(schedule.ageKey)}
+                            >
+                                <div className="p-4 flex items-center justify-between">
+                                    <div className="flex items-center gap-3">
+                                        <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
+                                            expandedAge === schedule.ageKey ? 'bg-clinical-blue text-white' : 'bg-gray-200 text-gray-600'
+                                        }`}>
+                                            {t(schedule.ageKey).split(' ')[0]}
+                                        </div>
+                                        <h3 className={`font-semibold ${expandedAge === schedule.ageKey ? 'text-clinical-blue' : 'text-gray-700'}`}>
+                                            {t(schedule.ageKey)}
+                                        </h3>
+                                    </div>
+                                    <div className="text-gray-400">
+                                        {expandedAge === schedule.ageKey ? (
+                                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                                            </svg>
+                                        ) : (
+                                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                            </svg>
+                                        )}
+                                    </div>
+                                </div>
+                                
+                                {expandedAge === schedule.ageKey && (
+                                    <div className="px-4 pb-4 pt-2 border-t border-gray-100 bg-white">
+                                        <div className="space-y-3 mt-2">
+                                            {schedule.vaccines.map((vaccine, idx) => (
+                                                <div key={idx} className="flex items-start gap-4 p-3 rounded-xl bg-gray-50">
+                                                    <div className="w-10 h-10 rounded-lg bg-primary-100 flex items-center justify-center text-primary-600 shrink-0">
+                                                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                                                        </svg>
+                                                    </div>
+                                                    <div className="flex-1">
+                                                        <div className="flex justify-between items-start">
+                                                            <h4 className="font-semibold text-gray-800">{vaccine.name}</h4>
+                                                            <span className="text-xs px-2 py-1 bg-white border border-gray-200 rounded-lg text-gray-500 font-medium">
+                                                                {t(vaccine.routeKey)}
+                                                            </span>
+                                                        </div>
+                                                        <p className="text-sm font-medium text-gray-700 mt-1">{t(vaccine.descKey)}</p>
+                                                        
+                                                        <div className="mt-3 space-y-2 bg-white rounded-lg p-3 border border-gray-100">
+                                                            <div>
+                                                                <span className="text-xs font-bold text-clinical-blue uppercase tracking-wider block mb-0.5">{t('why_its_important')}</span>
+                                                                <span className="text-sm text-gray-600 block leading-snug">{t(vaccine.impKey)}</span>
+                                                            </div>
+                                                            <div className="pt-2 border-t border-gray-50">
+                                                                <span className="text-xs font-bold text-red-500 uppercase tracking-wider block mb-0.5">{t('risk_if_missed')}</span>
+                                                                <span className="text-sm text-red-600/90 block leading-snug">{t(vaccine.riskKey)}</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+            
+            <div className="glass rounded-3xl p-6 relative overflow-hidden">
+                <div className="flex items-start gap-4">
+                    <div className="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center text-amber-600 shrink-0 mt-1">
+                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 className="font-semibold text-gray-800">{t('important_note')}</h3>
+                        <p className="text-sm text-gray-600 mt-1 leading-relaxed">
+                            {t('vaccine_disclaimer')}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}

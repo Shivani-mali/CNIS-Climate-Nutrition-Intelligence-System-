@@ -10,6 +10,7 @@ import HomePage from './pages/HomePage';
 import ScreeningPage from './pages/ScreeningPage';
 import ReportsPage from './pages/ReportsPage';
 import ChatbotPage from './pages/ChatbotPage';
+import DosesPage from './pages/DosesPage';
 
 function AppContent() {
   const { user, role, loading } = useAuth();
@@ -56,6 +57,7 @@ function AppContent() {
           <Route path="/" element={<HomePage />} />
           <Route path="/screening" element={<ScreeningPage />} />
           <Route path="/reports" element={<ReportsPage />} />
+          <Route path="/doses" element={<DosesPage />} />
           <Route path="/chatbot" element={<ChatbotPage />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />

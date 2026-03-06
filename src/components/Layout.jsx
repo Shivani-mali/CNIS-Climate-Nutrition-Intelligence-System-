@@ -8,6 +8,7 @@ const navItems = [
     { path: '/', icon: '🏠', labelKey: 'home' },
     { path: '/screening', icon: '📋', labelKey: 'screening' },
     { path: '/reports', icon: '📊', labelKey: 'reports' },
+    { path: '/doses', icon: '💉', labelKey: 'doses' },
     { path: '/chatbot', icon: '🤖', labelKey: 'chatbot' },
 ];
 
