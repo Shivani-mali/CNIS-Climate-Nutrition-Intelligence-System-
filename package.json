@@ -16,6 +16,8 @@
     "framer-motion": "^12.34.0",
     "i18next": "^25.8.7",
     "lucide-react": "^0.563.0",
+    "pdf-parse": "^2.4.5",
+    "pdfjs-dist": "^4.0.379",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-i18next": "^16.5.4",

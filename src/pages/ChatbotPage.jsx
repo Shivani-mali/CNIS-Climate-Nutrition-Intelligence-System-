@@ -2,6 +2,7 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useVoice } from '../hooks/useVoice';
 import { speak, getTTSLang } from '../utils/voice';
+import { searchKnowledgeBase, formatRAGContext, getRAGStats } from '../utils/ragSearch';
 
 // Built-in knowledge base for offline use
 const knowledgeBase = {
@@ -112,14 +113,29 @@ async function getAIResponse(message, lang) {
 
     if (!apiKey) {
         console.log('[Medibot] No API key, using offline response');
-        return getOfflineResponse(message, lang);
+        return { text: getOfflineResponse(message, lang), sources: [] };
     }
 
     try {
         const langName = lang === 'hi' ? 'Hindi' : lang === 'mr' ? 'Marathi' : 'English';
         console.log('[Medibot] Sending request - Language:', lang, '→', langName);
 
+        // === RAG: Search knowledge base for relevant context ===
+        const ragResults = searchKnowledgeBase(message, 5);
+        const ragContext = formatRAGContext(ragResults);
+        const sourcesUsed = [...new Set(ragResults.map(r => r.source))];
+
+        if (ragResults.length > 0) {
+            console.log(`[RAG] Found ${ragResults.length} relevant chunks from: ${sourcesUsed.join(', ')}`);
+        } else {
+            console.log('[RAG] No relevant chunks found, using general knowledge');
+        }
+
         let systemText = '';
+        const ragInstruction = ragContext
+            ? `\n\nIMPORTANT: Use the following verified reference material to ground your answer. Cite the source when using specific data. If the reference material doesn't cover the topic, use your general knowledge.\n\n${ragContext}`
+            : '';
+
         if (lang === 'hi') {
             systemText = `तुम CNIS NutriCare Medibot हो। तुम्हें हर जवाब पूरी तरह हिंदी में देना है। कोई भी अंग्रेजी शब्द मत लिखो। सब कुछ हिंदी में लिखो।
 
@@ -129,10 +145,9 @@ async function getAIResponse(message, lang) {
 - पूरा जवाब हिंदी में लिखो
 - बुलेट पॉइंट्स, बोल्ड टेक्स्ट और इमोजी का उपयोग करो
 - दवाई की खुराक मत बताओ, डॉक्टर से मिलने को कहो
+- अगर संदर्भ सामग्री दी गई है, तो उसका उपयोग करो और स्रोत का उल्लेख करो
 - जवाब के अंत में "📌 **सुझाए गए सवाल:**" के तहत 3-4 फॉलो-अप सवाल हिंदी में लिखो
-- जवाब 500 शब्दों से कम रखो
-
-याद रखो: पूरा जवाब केवल हिंदी में। एक भी अंग्रेजी शब्द नहीं।`;
+- जवाब 500 शब्दों से कम रखो${ragInstruction}`;
         } else if (lang === 'mr') {
             systemText = `तुम्ही CNIS NutriCare Medibot आहात. तुम्हाला प्रत्येक उत्तर पूर्णपणे मराठीत द्यायचे आहे. कोणताही इंग्रजी शब्द लिहू नका. सर्व काही मराठीत लिहा.
 
@@ -142,10 +157,9 @@ async function getAIResponse(message, lang) {
 - संपूर्ण उत्तर मराठीत लिहा
 - बुलेट पॉइंट्स, बोल्ड टेक्स्ट आणि इमोजी वापरा
 - औषधाचा डोस सांगू नका, डॉक्टरांना भेटायला सांगा
+- संदर्भ सामग्री दिली असल्यास, ती वापरा आणि स्रोताचा उल्लेख करा
 - उत्तराच्या शेवटी "📌 **सुचवलेले प्रश्न:**" अंतर्गत 3-4 फॉलो-अप प्रश्न मराठीत लिहा
-- उत्तर 500 शब्दांपेक्षा कमी ठेवा
-
-लक्षात ठेवा: संपूर्ण उत्तर फक्त मराठीत. एकही इंग्रजी शब्द नाही.`;
+- उत्तर 500 शब्दांपेक्षा कमी ठेवा${ragInstruction}`;
         } else {
             systemText = `You are CNIS NutriCare Medibot, an intelligent AI assistant. You answer ANY question - health, education, general knowledge, anything.
 
@@ -153,8 +167,9 @@ Rules:
 - Respond entirely in English
 - Use bullet points, bold text, and emojis
 - For health: never prescribe dosages, recommend seeing a doctor
+- If reference material is provided, use it to ground your answer and cite sources
 - End with "📌 **Recommended Questions:**" with 3-4 follow-up questions
-- Keep under 500 words`;
+- Keep under 500 words${ragInstruction}`;
         }
 
         const userText = lang === 'hi'
@@ -163,8 +178,8 @@ Rules:
                 ? `प्रश्न (मराठीत उत्तर द्या): ${message}`
                 : `Question: ${message}`;
 
-        // Try with primary model, then fallback model if rate limited
-        const models = ['gemini-2.0-flash', 'gemini-1.5-flash'];
+        // Try with primary model, then fallback models if rate limited or not found
+        const models = ['gemini-3-flash-preview', 'gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-pro-latest'];
 
         for (const model of models) {
             try {
@@ -184,7 +199,6 @@ Rules:
 
                 if (response.status === 429) {
                     console.warn(`[Medibot] Rate limited on ${model}, trying next...`);
-                    // Wait 2 seconds before trying next model
                     await new Promise(r => setTimeout(r, 2000));
                     continue;
                 }
@@ -199,19 +213,18 @@ Rules:
                 const answer = data.candidates?.[0]?.content?.parts?.[0]?.text;
                 if (answer) {
                     console.log(`[Medibot] Got response from ${model}, length:`, answer.length);
-                    return answer;
+                    return { text: answer, sources: sourcesUsed };
                 }
             } catch (fetchErr) {
                 console.error(`[Medibot] Fetch error on ${model}:`, fetchErr.message);
             }
         }
 
-        // All models failed - return a helpful message in the right language
         console.error('[Medibot] All models failed, using offline response');
-        return getOfflineResponse(message, lang);
+        return { text: getOfflineResponse(message, lang), sources: [] };
     } catch (err) {
         console.error('[Medibot] Error:', err.message);
-        return getOfflineResponse(message, lang);
+        return { text: getOfflineResponse(message, lang), sources: [] };
     }
 }
 
@@ -266,11 +279,11 @@ export default function ChatbotPage() {
         const response = await getAIResponse(messageText, i18n.language);
 
         setIsTyping(false);
-        const botMsg = { role: 'bot', text: response };
+        const botMsg = { role: 'bot', text: response.text, sources: response.sources || [] };
         setMessages(prev => [...prev, botMsg]);
 
         // Read response aloud (first 200 chars)
-        speak(response.replace(/[*#_`]/g, '').substring(0, 200), getTTSLang(i18n.language));
+        speak(response.text.replace(/[*#_`]/g, '').substring(0, 200), getTTSLang(i18n.language));
     };
 
     // Keep ref updated
@@ -362,12 +375,27 @@ export default function ChatbotPage() {
                                 <div className="flex items-center gap-2 mb-2 pb-2 border-b border-gray-100">
                                     <span className="text-sm">🏥</span>
                                     <span className="text-xs font-semibold text-clinical-blue">Medibot</span>
+                                    {msg.sources && msg.sources.length > 0 && (
+                                        <span className="text-[10px] px-1.5 py-0.5 bg-blue-50 text-blue-600 rounded-full font-medium">📚 RAG</span>
+                                    )}
                                     <span className="text-[10px] px-1.5 py-0.5 bg-green-50 text-green-600 rounded-full font-medium ml-auto">Health AI</span>
                                 </div>
                             )}
                             <div className={`text-sm leading-relaxed ${msg.role === 'user' ? 'text-white' : 'text-gray-700'}`}>
                                 {renderText(msg.text)}
                             </div>
+                            {msg.role === 'bot' && msg.sources && msg.sources.length > 0 && (
+                                <div className="mt-3 pt-2 border-t border-gray-100">
+                                    <p className="text-[10px] text-gray-400 mb-1">📚 Sources:</p>
+                                    <div className="flex flex-wrap gap-1">
+                                        {msg.sources.map((src, si) => (
+                                            <span key={si} className="text-[10px] px-2 py-0.5 bg-blue-50 text-blue-600 rounded-full font-medium">
+                                                {src}
+                                            </span>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     </div>
                 ))}
