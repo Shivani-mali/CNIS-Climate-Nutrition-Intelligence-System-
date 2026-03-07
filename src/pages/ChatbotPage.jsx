@@ -2,7 +2,7 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useVoice } from '../hooks/useVoice';
 import { speak, getTTSLang } from '../utils/voice';
-import { searchKnowledgeBase, formatRAGContext, getRAGStats } from '../utils/ragSearch';
+import { searchKnowledgeBase, formatRAGContext, getRAGStats, initKnowledgeBase } from '../utils/ragSearch';
 
 // Built-in knowledge base for offline use
 const knowledgeBase = {
@@ -247,6 +247,11 @@ export default function ChatbotPage() {
             isWelcome: true
         }]);
     }, [i18n.language]);
+
+    // Load RAG Database
+    useEffect(() => {
+        initKnowledgeBase();
+    }, []);
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });

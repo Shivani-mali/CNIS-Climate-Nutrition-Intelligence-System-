@@ -3,8 +3,22 @@
  * Searches the knowledge base for relevant chunks based on a user query
  */
 
-import ragData from '../data/ragKnowledgeBase.json';
+// Knowledge base data loaded asynchronously
+let ragData = null;
+let isLoadingData = false;
 
+export async function initKnowledgeBase() {
+    if (ragData || isLoadingData) return;
+    isLoadingData = true;
+    try {
+        const response = await fetch('/ragKnowledgeBase.json');
+        ragData = await response.json();
+        console.log('[RAG] Knowledge base loaded:', ragData.totalChunks, 'chunks');
+    } catch (err) {
+        console.error('[RAG] Failed to load knowledge base json', err);
+    }
+    isLoadingData = false;
+}
 // Common stop words to ignore in scoring
 const STOP_WORDS = new Set([
     'the', 'and', 'for', 'are', 'but', 'not', 'you', 'all', 'can', 'had', 'her',

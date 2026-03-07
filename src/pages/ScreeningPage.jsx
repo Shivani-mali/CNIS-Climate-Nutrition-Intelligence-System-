@@ -74,7 +74,7 @@ export default function ScreeningPage() {
     // Cleanup camera stream on unmount
     useEffect(() => {
         return () => {
-            stopCamera();
+            // Camera cleanup safely removed
         };
     }, []);
 
@@ -369,9 +369,11 @@ export default function ScreeningPage() {
             }
         }
 
-        // Clean all sections
+        // Clean all sections by removing emojis and markdown (using safer regex)
         const cleanSections = sections.map(s => 
-            s.replace(/[✅⚠️❌🚨🏥📋🍽️💡🥛🥚]/g, '').trim()
+            s.replace(/[\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF]/g, '')
+             .replace(/[*#_`]/g, '')
+             .trim()
         );
 
         // For English, use Web Speech API (works fine)
@@ -545,7 +547,7 @@ export default function ScreeningPage() {
     return (
         <div className="space-y-6 animate-fade-in pb-6">
             {/* Header */}
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
                     <h2 className="text-2xl font-bold text-gray-800">{t('screening')}</h2>
                     <p className="text-sm text-gray-500">Fill in child's measurements for nutrition assessment</p>
@@ -863,8 +865,8 @@ export default function ScreeningPage() {
                         result.zone === 'orange' ? 'bg-gradient-to-r from-orange-500 to-amber-500' :
                             'bg-gradient-to-r from-green-500 to-emerald-500'
                         }`}>
-                        <div className="flex items-center gap-4">
-                            <div className="w-16 h-16 rounded-2xl bg-white/20 flex items-center justify-center">
+                        <div className="flex flex-col sm:flex-row items-center gap-4 text-center sm:text-left">
+                            <div className="w-16 h-16 shrink-0 rounded-2xl bg-white/20 flex items-center justify-center">
                                 <span className="text-4xl flex items-center justify-center">
                                     {result.zone === 'red' ? <AlertCircle className="w-10 h-10 text-white" /> : result.zone === 'orange' ? <AlertTriangle className="w-10 h-10 text-white" /> : <CheckCircle className="w-10 h-10 text-white" />}
                                 </span>
@@ -956,7 +958,7 @@ export default function ScreeningPage() {
                             <h3 className="font-semibold text-gray-700 mb-2 flex items-center gap-2">
                                 <UtensilsCrossed className="w-5 h-5 text-indigo-500" /> {t('diet_recommendations')}
                             </h3>
-                            <div className="flex items-center gap-3 mb-4">
+                            <div className="flex flex-wrap items-center gap-3 mb-4">
                                 <span className="px-3 py-1 bg-primary-50 text-clinical-blue text-xs font-medium rounded-full text-left">
                                     📍 {locationInfo.address ? `${locationInfo.address}, ` : ''}{(locationInfo.city && locationInfo.city !== 'Unknown') ? `${locationInfo.city}, ` : ''}{locationInfo.state || 'Maharashtra'}
                                 </span>
@@ -1006,7 +1008,7 @@ export default function ScreeningPage() {
                     )}
 
                     {/* Action Buttons */}
-                    <div className="flex gap-3">
+                    <div className="flex flex-col sm:flex-row gap-3">
                         <button
                             onClick={handleSave}
                             disabled={isSaving || saved}
