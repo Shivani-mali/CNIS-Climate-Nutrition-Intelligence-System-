@@ -65,30 +65,53 @@ Respond in this exact JSON format:
   "malnutritionDetails": "describe any visual signs of malnutrition observed, or state none observed. Be clinical but clear."
 }`;
 
-        const response = await fetch(
-            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,
-            {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    contents: [{
-                        parts: [
-                            { text: prompt },
-                            {
-                                inlineData: {
-                                    mimeType: 'image/jpeg',
-                                    data: base64
-                                }
+        const models = ['gemini-3-flash-preview', 'gemini-2.5-flash', 'gemini-2.0-flash'];
+        let response = null;
+        let lastErrorData = null;
+
+        for (const model of models) {
+            try {
+                const res = await fetch(
+                    `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY}`,
+                    {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            contents: [{
+                                parts: [
+                                    { text: prompt },
+                                    {
+                                        inlineData: {
+                                            mimeType: 'image/jpeg',
+                                            data: base64
+                                        }
+                                    }
+                                ]
+                            }],
+                            generationConfig: {
+                                temperature: 0.1,
+                                maxOutputTokens: 512
                             }
-                        ]
-                    }],
-                    generationConfig: {
-                        temperature: 0.1,
-                        maxOutputTokens: 512
+                        })
                     }
-                })
+                );
+
+                if (res.status === 429 || res.status === 404) {
+                    lastErrorData = await res.text();
+                    console.warn(`Gemini validation: Model ${model} rate limited or not found. Trying next...`);
+                    continue;
+                }
+
+                response = res;
+                break;
+            } catch (err) {
+                console.warn(`Gemini API fetch error on ${model}:`, err.message);
             }
-        );
+        }
+
+        if (!response) {
+            return { error: true, status: 429, message: lastErrorData || 'Quota exceeded on all models' };
+        }
 
         if (!response.ok) {
             const errorData = await response.text();
@@ -234,33 +257,9 @@ export async function validateChildPhoto(imageSource, expectedGender = 'unknown'
             }
         }
 
-        // Handle specific Gemini errors if present
+        // Handle specific Gemini errors if present (but continue to skin tone fallback)
         if (geminiResult && geminiResult.error) {
-            console.warn('Gemini validation failed, reason:', geminiResult.message);
-            if (geminiResult.status === 400 && geminiResult.message.includes('API key')) {
-                return {
-                    valid: false,
-                    message: '❌ AI validation unavailable: Invalid or missing API Key. Please check your .env file.',
-                    details: { error: 'API_KEY_ERROR' },
-                    confidence: 0
-                };
-            }
-            if (geminiResult.status === 403 && geminiResult.message.includes('leaked')) {
-                return {
-                    valid: false,
-                    message: '❌ AI validation unavailable: Your Gemini API key has been disabled because it was leaked. Please generate a new key.',
-                    details: { error: 'API_KEY_LEAKED' },
-                    confidence: 0
-                };
-            }
-            if (geminiResult.status === 429) {
-                return {
-                    valid: false,
-                    message: '❌ AI validation unavailable: Your Gemini API key has exceeded its usage quota (or rate limit). Please wait or generate a new key.',
-                    details: { error: 'API_KEY_QUOTA_EXCEEDED' },
-                    confidence: 0
-                };
-            }
+            console.warn('Gemini AI validation unavailable:', geminiResult.message);
         }
 
         // Fallback: skin-tone detection
