@@ -14,20 +14,14 @@ import DosesPage from './pages/DosesPage';
 import DietPlanPage from './pages/DietPlanPage';
 import AnalyticsPage from './pages/AnalyticsPage';
 
-// ... (other imports)
-import logo from '../logo.png';
+import logo from './assets/logo.png';
 
-function AppContent() {
+function AppContent({ showSplash, onSplashFinish }) {
   const { user, role, loading } = useAuth();
-  const [showSplash, setShowSplash] = useState(true);
-
-  const handleSplashFinish = useCallback(() => {
-    setShowSplash(false);
-  }, []);
 
   // Show splash screen
   if (showSplash) {
-    return <SplashScreen onFinish={handleSplashFinish} />;
+    return <SplashScreen onFinish={onSplashFinish} />;
   }
 
   // Show loading
@@ -74,9 +68,15 @@ function AppContent() {
 }
 
 export default function App() {
+  const [showSplash, setShowSplash] = useState(true);
+
+  const handleSplashFinish = useCallback(() => {
+    setShowSplash(false);
+  }, []);
+
   return (
     <AuthProvider>
-      <AppContent />
+      <AppContent showSplash={showSplash} onSplashFinish={handleSplashFinish} />
     </AuthProvider>
   );
 }

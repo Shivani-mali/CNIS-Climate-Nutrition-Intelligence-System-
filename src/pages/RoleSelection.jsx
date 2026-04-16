@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
-import { Stethoscope, Users, Microscope } from 'lucide-react';
-import logo from '../../logo.png';
+import { Stethoscope, Users, Microscope, LogOut } from 'lucide-react';
+import logo from '../assets/logo.png';
 
 const roles = [
     {
@@ -38,7 +38,7 @@ const roles = [
 
 export default function RoleSelection() {
     const { t } = useTranslation();
-    const { selectRole, user } = useAuth();
+    const { selectRole, logout, user } = useAuth();
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 via-white to-primary-100 relative overflow-hidden p-4">
@@ -55,26 +55,26 @@ export default function RoleSelection() {
                         <img src={logo} alt="CNIS Logo" className="w-full h-full object-contain" />
                     </div>
                     {user?.displayName && (
-                        <p className="text-gray-500 mb-2">
-                            Welcome, <span className="font-semibold text-gray-700">{user.displayName}</span>
+                        <p className="text-slate-600 mb-2 font-medium">
+                            Welcome, <span className="font-black text-slate-950 underline decoration-clinical-blue/30">{user.displayName}</span>
                         </p>
                     )}
-                    <h1 className="text-2xl font-bold text-gray-800">{t('select_role')}</h1>
-                    <p className="text-sm text-gray-500 mt-1">Choose your role to personalize your experience</p>
+                    <h1 className="text-3xl font-black text-slate-950 tracking-tight">{t('select_role')}</h1>
+                    <p className="text-sm text-slate-700 mt-2 font-bold">Choose your role to personalize your experience</p>
                 </div>
 
                 {/* Role Cards */}
-                <div className="space-y-4">
+                <div className="space-y-4 mb-8">
                     {roles.map((role, index) => (
                         <button
                             key={role.id}
                             id={`role-${role.id}-btn`}
                             onClick={() => selectRole(role.id)}
-                            className={`w-full glass rounded-2xl p-5 border-2 ${role.borderColor} ${role.hoverBorder} hover:shadow-xl transition-all duration-300 group text-left animate-slide-up`}
+                            className={`w-full glass rounded-3xl p-5 border-2 ${role.borderColor} ${role.hoverBorder} hover:shadow-xl transition-all duration-300 group text-left animate-slide-up shadow-sm bg-white/50 backdrop-blur-md`}
                             style={{ animationDelay: `${index * 100}ms` }}
                         >
                             <div className="flex items-center gap-4">
-                                <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${role.gradient} flex items-center justify-center shadow-md group-hover:scale-110 transition-transform duration-300`}>
+                                <div className={`w-14 h-14 rounded-[1.25rem] bg-gradient-to-br ${role.gradient} flex items-center justify-center shadow-md group-hover:scale-110 transition-transform duration-300`}>
                                     {role.icon}
                                 </div>
                                 <div className="flex-1">
@@ -89,6 +89,18 @@ export default function RoleSelection() {
                             </div>
                         </button>
                     ))}
+                </div>
+
+                {/* Logout Option */}
+                <div className="text-center">
+                    <button
+                        onClick={logout}
+                        className="text-sm text-gray-400 hover:text-red-500 transition-colors flex items-center gap-2 mx-auto py-2 px-4 rounded-xl hover:bg-red-50"
+                        id="role-logout-btn"
+                    >
+                        <LogOut className="w-4 h-4" />
+                        {t('logout')}
+                    </button>
                 </div>
             </div>
         </div>

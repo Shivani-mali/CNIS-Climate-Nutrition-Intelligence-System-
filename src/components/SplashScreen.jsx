@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import logo from '../../logo.png';
+import logo from '../assets/logo.png';
 
 export default function SplashScreen({ onFinish }) {
     const { t } = useTranslation();

@@ -232,158 +232,154 @@ export default function DosesPage() {
     };
 
     return (
-        <div className="space-y-6 slide-up">
-            <div className="glass rounded-3xl p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden dark:bg-slate-900/40">
-                <div className="absolute top-0 right-0 w-64 h-64 bg-primary-100 dark:bg-blue-900/20 rounded-full blur-3xl opacity-50 -translate-y-1/2 translate-x-1/4"></div>
-                <div className="relative z-10 w-full">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
-                        <div className="flex items-center gap-4">
-                            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-white dark:bg-slate-800 flex items-center justify-center shadow-sm text-clinical-blue dark:text-blue-400 shrink-0">
-                                <Syringe className="w-6 h-6" />
+        <div className="space-y-6 animate-fade-in pb-10">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <h2 className="text-2xl font-bold text-slate-800">{t('vaccination_schedule')}</h2>
+                    <p className="text-sm text-slate-500">{t('vaccination_subtitle') || 'Track and manage essential childhood immunizations'}</p>
+                </div>
+                
+                {role === 'parent' && (
+                    <button 
+                        onClick={toggleReminders}
+                        className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all ${
+                            remindersEnabled 
+                                ? 'bg-clinical-blue text-white shadow-md' 
+                                : 'bg-gray-100 text-gray-500 border border-gray-200 hover:bg-gray-200 hover:text-gray-700'
+                        }`}
+                    >
+                        {remindersEnabled ? <Bell className="w-4 h-4" /> : <BellOff className="w-4 h-4" />}
+                        {remindersEnabled ? t('reminders_on', 'Reminders On') : t('reminders_off', 'Enable Reminders')}
+                    </button>
+                )}
+            </div>
+
+            {role === 'parent' && (
+                <div className="glass p-5 border border-gray-100 rounded-2xl flex flex-col sm:flex-row sm:items-center gap-4 bg-white shadow-sm">
+                    <div className="flex-1">
+                        <label className="text-sm font-bold text-slate-800 mb-1 flex items-center gap-2">
+                            <Calendar className="w-4 h-4 text-clinical-blue" />
+                            {t('child_dob', 'Child\'s Date of Birth')}
+                        </label>
+                        <p className="text-[11px] text-gray-500 font-medium">{t('dob_desc', 'Enter DOB to calculate exact upcoming vaccine dates.')}</p>
+                    </div>
+                    <input 
+                        type="date" 
+                        value={childDOB}
+                        onChange={handeDOBChange}
+                        className="px-4 py-2 rounded-xl border-2 border-gray-100 focus:border-clinical-blue focus:ring-0 bg-white text-slate-900 font-bold outline-none"
+                    />
+                </div>
+            )}
+
+            <div className="grid gap-4">
+                {VACCINE_SCHEDULE.map((schedule) => (
+                    <div 
+                        key={schedule.ageKey}
+                        className={`rounded-2xl border-2 transition-all duration-300 overflow-hidden ${
+                            expandedAge === schedule.ageKey 
+                                ? 'border-clinical-blue bg-white shadow-md' 
+                                : 'border-gray-50 bg-white hover:border-gray-100 hover:shadow-sm cursor-pointer'
+                        }`}
+                        onClick={() => setExpandedAge(expandedAge === schedule.ageKey ? null : schedule.ageKey)}
+                    >
+                        <div className="p-4 flex items-center justify-between">
+                            <div className="flex items-center gap-4">
+                                <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-bold text-sm shrink-0 transition-colors ${
+                                    expandedAge === schedule.ageKey ? 'bg-clinical-blue text-white' : 'bg-gray-100 text-gray-400'
+                                }`}>
+                                    {t(schedule.ageKey).split(' ')[0]}
+                                </div>
+                                <h3 className={`font-bold text-base ${expandedAge === schedule.ageKey ? 'text-slate-900' : 'text-slate-700'}`}>
+                                    {t(schedule.ageKey)}
+                                </h3>
                             </div>
-                            <div>
-                                <h2 className="text-xl sm:text-2xl font-bold text-clinical-dark dark:text-white">{t('vaccination_schedule')}</h2>
-                                <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400">{t('vaccination_subtitle')}</p>
+                            <div className="text-gray-300">
+                                {expandedAge === schedule.ageKey ? <ChevronDown className="w-5 h-5 text-clinical-blue" /> : <ChevronRight className="w-5 h-5" />}
                             </div>
                         </div>
                         
-                        {role === 'parent' && (
-                            <button 
-                                onClick={toggleReminders}
-                                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
-                                    remindersEnabled 
-                                        ? 'bg-indigo-100 text-indigo-700 border border-indigo-200 dark:bg-indigo-900/30 dark:text-indigo-300 dark:border-indigo-800' 
-                                        : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 dark:bg-slate-800 dark:text-gray-300 dark:border-slate-700 dark:hover:bg-slate-700'
-                                }`}
-                            >
-                                {remindersEnabled ? <Bell className="w-4 h-4" /> : <BellOff className="w-4 h-4" />}
-                                {remindersEnabled ? t('reminders_on', 'Reminders On') : t('reminders_off', 'Enable Reminders')}
-                            </button>
-                        )}
-                    </div>
-
-                    {role === 'parent' && (
-                        <div className="mt-6 p-4 bg-white/60 backdrop-blur-md border border-clinical-blue/20 rounded-2xl flex flex-col sm:flex-row sm:items-center gap-4 dark:bg-slate-800/60 dark:border-blue-500/20">
-                            <div className="flex-1">
-                                <label className="block text-sm font-semibold text-gray-700 mb-1 flex items-center gap-2 dark:text-gray-200">
-                                    <Calendar className="w-4 h-4 text-clinical-blue dark:text-blue-400" />
-                                    {t('child_dob', 'Child\'s Date of Birth')}
-                                </label>
-                                <p className="text-xs text-gray-500 dark:text-gray-400">{t('dob_desc', 'Enter DOB to calculate exact upcoming vaccine dates.')}</p>
-                            </div>
-                            <input 
-                                type="date" 
-                                value={childDOB}
-                                onChange={handeDOBChange}
-                                className="px-4 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-clinical-blue/50 bg-white shadow-sm dark:bg-slate-900 dark:border-slate-700 dark:text-white"
-                            />
-                        </div>
-                    )}
-
-                    <div className="grid gap-4 mt-8">
-                        {VACCINE_SCHEDULE.map((schedule) => (
-                            <div 
-                                key={schedule.ageKey}
-                                className={`rounded-2xl border transition-all duration-300 overflow-hidden ${
-                                    expandedAge === schedule.ageKey 
-                                        ? 'border-clinical-blue bg-white dark:bg-slate-800 shadow-md' 
-                                        : 'border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-slate-800/50 hover:bg-white dark:hover:bg-slate-800 cursor-pointer'
-                                }`}
-                                onClick={() => setExpandedAge(expandedAge === schedule.ageKey ? null : schedule.ageKey)}
-                            >
-                                <div className="p-4 flex items-center justify-between">
-                                    <div className="flex items-center gap-3">
-                                        <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs sm:text-sm font-bold shrink-0 ${
-                                            expandedAge === schedule.ageKey ? 'bg-clinical-blue text-white' : 'bg-gray-200 dark:bg-slate-700 text-gray-600 dark:text-gray-300'
-                                        }`}>
-                                            {t(schedule.ageKey).split(' ')[0]}
-                                        </div>
-                                        <h3 className={`font-semibold text-sm sm:text-base ${expandedAge === schedule.ageKey ? 'text-clinical-blue dark:text-blue-400' : 'text-gray-700 dark:text-gray-200'}`}>
-                                            {t(schedule.ageKey)}
-                                        </h3>
-                                    </div>
-                                    <div className="text-gray-400">
-                                        {expandedAge === schedule.ageKey ? <ChevronDown className="w-5 h-5 text-clinical-blue dark:text-blue-400" /> : <ChevronRight className="w-5 h-5" />}
-                                    </div>
-                                </div>
-                                
-                                {expandedAge === schedule.ageKey && (
-                                    <div className="px-4 pb-4 pt-2 border-t border-gray-100 dark:border-gray-700 bg-white dark:bg-slate-800">
-                                        <div className="space-y-3 mt-2">
-                                            {schedule.vaccines.map((vaccine, idx) => {
-                                                const isCompleted = completedDoses[vaccine.name];
-                                                
-                                                return (
-                                                    <div key={idx} className={`flex items-start gap-3 sm:gap-4 p-4 rounded-xl transition-colors ${
-                                                        isCompleted ? 'bg-green-50/50 border border-green-100 dark:bg-green-900/20 dark:border-green-800/50' : 'bg-gray-50 border border-transparent dark:bg-slate-700/50 dark:border-slate-600/50'
+                        {expandedAge === schedule.ageKey && (
+                            <div className="px-4 pb-4 bg-white border-t border-gray-50">
+                                <div className="space-y-4 mt-4">
+                                    {schedule.vaccines.map((vaccine, idx) => {
+                                        const isCompleted = completedDoses[vaccine.name];
+                                        
+                                        return (
+                                            <div key={idx} className={`p-4 rounded-xl border-2 transition-all ${
+                                                isCompleted ? 'bg-green-50/20 border-green-100' : 'bg-white border-gray-50 hover:border-gray-100'
+                                            }`}>
+                                                <div className="flex items-start gap-4">
+                                                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm ${
+                                                        isCompleted ? 'bg-green-100 text-green-600' : 'bg-blue-50 text-blue-600'
                                                     }`}>
-                                                        <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center shrink-0 mt-0.5 ${
-                                                            isCompleted ? 'bg-green-100 text-green-600 dark:bg-green-900/50 dark:text-green-400' : 'bg-primary-100 text-primary-600 dark:bg-blue-900/50 dark:text-blue-400'
-                                                        }`}>
-                                                            {isCompleted ? <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5" /> : <Syringe className="w-4 h-4 sm:w-5 sm:h-5" />}
-                                                        </div>
-                                                        <div className="flex-1 min-w-0">
-                                                            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1.5 sm:gap-2">
-                                                                <div className="flex items-center gap-2">
-                                                                    <h4 className={`font-semibold text-sm sm:text-base truncate w-full sm:w-auto ${isCompleted ? 'text-green-800 dark:text-green-400' : 'text-gray-800 dark:text-gray-100'}`}>
-                                                                        {vaccine.name}
-                                                                    </h4>
-                                                                    {isCompleted && <span className="text-[10px] uppercase font-bold text-green-600 bg-green-100 dark:text-green-300 dark:bg-green-900/50 px-2 py-0.5 rounded-full">{t('completed', 'Done')}</span>}
-                                                                </div>
-                                                                <div className="flex gap-2 self-start sm:self-auto">
-                                                                    {role === 'parent' && (
-                                                                        <button 
-                                                                            onClick={(e) => { e.stopPropagation(); toggleDose(vaccine.name); }}
-                                                                            className={`text-xs px-3 py-1 rounded-lg font-medium transition-all ${
-                                                                                isCompleted 
-                                                                                    ? 'bg-transparent text-gray-500 hover:bg-gray-200 dark:text-gray-400 dark:hover:bg-slate-600' 
-                                                                                    : 'bg-clinical-blue text-white hover:bg-clinical-blue/90 shadow-sm dark:bg-blue-600 dark:hover:bg-blue-500'
-                                                                            }`}
-                                                                        >
-                                                                            {isCompleted ? t('undo', 'Undo') : t('mark_done', 'Mark Done')}
-                                                                        </button>
-                                                                    )}
-                                                                    <span className="text-[10px] sm:text-xs px-2 py-1 bg-white border border-gray-200 rounded-lg text-gray-500 font-medium whitespace-nowrap hidden sm:inline-block dark:bg-slate-800 dark:border-slate-600 dark:text-gray-400">
-                                                                        {t(vaccine.routeKey)}
+                                                        {isCompleted ? <CheckCircle className="w-6 h-6" /> : <Syringe className="w-6 h-6" />}
+                                                    </div>
+                                                    <div className="flex-1 min-w-0">
+                                                        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-2">
+                                                            <div className="flex items-center gap-2">
+                                                                <h4 className={`font-black text-lg ${isCompleted ? 'text-green-800' : 'text-slate-900'}`}>
+                                                                    {vaccine.name}
+                                                                </h4>
+                                                                {isCompleted && (
+                                                                    <span className="text-[10px] uppercase font-black text-white bg-green-500 px-2 py-0.5 rounded-full shadow-sm">
+                                                                        {t('completed', 'Done')}
                                                                     </span>
-                                                                </div>
+                                                                )}
                                                             </div>
-                                                            <p className={`text-xs sm:text-sm font-medium mt-1 ${isCompleted ? 'text-green-700/70 dark:text-green-400/80' : 'text-gray-700 dark:text-gray-300'}`}>{t(vaccine.descKey)}</p>
-                                                        
-                                                        <div className="mt-3 space-y-2 bg-white rounded-lg p-2.5 sm:p-3 border border-gray-100 text-xs sm:text-sm dark:bg-slate-800 dark:border-slate-700">
-                                                            <div>
-                                                                <span className="text-[10px] sm:text-xs font-bold text-clinical-blue uppercase tracking-wider block mb-0.5 dark:text-blue-400">{t('why_its_important')}</span>
-                                                                <span className="text-gray-600 block leading-snug dark:text-gray-300">{t(vaccine.impKey)}</span>
-                                                            </div>
-                                                            <div className="pt-2 border-t border-gray-50 dark:border-slate-700/50">
-                                                                <span className="text-[10px] sm:text-xs font-bold text-red-500 uppercase tracking-wider block mb-0.5 dark:text-red-400">{t('risk_if_missed')}</span>
-                                                                <span className="text-red-600/90 block leading-snug dark:text-red-300">{t(vaccine.riskKey)}</span>
+                                                            <div className="flex gap-2">
+                                                                {role === 'parent' && (
+                                                                    <button 
+                                                                        onClick={(e) => { e.stopPropagation(); toggleDose(vaccine.name); }}
+                                                                        className={`text-[11px] px-3 py-1.5 rounded-lg font-bold transition-all shadow-sm ${
+                                                                            isCompleted 
+                                                                                ? 'bg-gray-100 text-gray-600 hover:bg-gray-200' 
+                                                                                : 'bg-clinical-blue text-white hover:bg-clinical-dark'
+                                                                        }`}
+                                                                    >
+                                                                        {isCompleted ? t('undo', 'Undo') : t('mark_done', 'Mark Done')}
+                                                                    </button>
+                                                                )}
+                                                                <span className="text-[10px] px-2 py-1 bg-gray-50 border border-gray-100 rounded-lg text-slate-500 font-bold uppercase tracking-wider">
+                                                                    {t(vaccine.routeKey)}
+                                                                </span>
                                                             </div>
                                                         </div>
+                                                        <p className={`text-sm font-bold leading-snug ${isCompleted ? 'text-slate-600/80' : 'text-slate-600'}`}>
+                                                            {t(vaccine.descKey)}
+                                                        </p>
+                                                    
+                                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
+                                                            <div className="p-3 bg-blue-50/50 rounded-xl border border-blue-100 shadow-sm">
+                                                                <span className="text-[10px] font-black text-blue-600 uppercase tracking-widest block mb-1">{t('why_its_important')}</span>
+                                                                <span className="text-slate-800 text-[13px] font-bold block leading-relaxed">{t(vaccine.impKey)}</span>
+                                                            </div>
+                                                            <div className="p-3 bg-red-50/50 rounded-xl border border-red-100 shadow-sm">
+                                                                <span className="text-[10px] font-black text-red-600 uppercase tracking-widest block mb-1">{t('risk_if_missed')}</span>
+                                                                <span className="text-slate-800 text-[13px] font-bold block leading-relaxed">{t(vaccine.riskKey)}</span>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                );
-                                            })}
-                                        </div>
-                                    </div>
-                                )}
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
                             </div>
-                        ))}
+                        )}
                     </div>
-                </div>
+                ))}
             </div>
-            
-            <div className="glass rounded-3xl p-6 relative overflow-hidden dark:bg-slate-900/40">
-                <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center text-amber-600 shrink-0 mt-1 dark:bg-amber-900/30 dark:text-amber-400">
-                        <Info className="w-5 h-5" />
-                    </div>
-                    <div>
-                        <h3 className="font-semibold text-gray-800 dark:text-white">{t('important_note')}</h3>
-                        <p className="text-sm text-gray-600 mt-1 leading-relaxed dark:text-gray-300">
-                            {t('vaccine_disclaimer')}
-                        </p>
-                    </div>
+
+            <div className="glass p-5 rounded-2xl flex items-start gap-4 border border-amber-100 bg-white shadow-sm">
+                <div className="w-10 h-10 bg-amber-50 rounded-xl flex items-center justify-center flex-shrink-0 animate-pulse-soft">
+                    <Info className="w-5 h-5 text-amber-600" />
+                </div>
+                <div className="space-y-1">
+                    <h3 className="font-black text-slate-900 leading-tight">{t('important_note')}</h3>
+                    <p className="text-xs text-slate-600 font-bold leading-relaxed pr-6">
+                        {t('vaccine_disclaimer')}
+                    </p>
                 </div>
             </div>
         </div>

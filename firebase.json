@@ -1,8 +1,16 @@
 {
   "firestore": {
     "database": "(default)",
-    "location": "nam5",
+    "location": "us-east1",
     "rules": "firestore.rules",
     "indexes": "firestore.indexes.json"
+  },
+  "auth": {
+    "providers": {
+      "googleSignIn": {
+        "oAuthBrandDisplayName": "CNIS Nutrition System",
+        "supportEmail": "shubhasmali1983@gmail.com"
+      }
+    }
   }
 }

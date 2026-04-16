@@ -617,12 +617,12 @@ export default function ScreeningPage() {
                 <div className="space-y-5">
                     {/* Child Info */}
                     <div className="glass rounded-2xl p-5 border border-gray-100">
-                        <h3 className="font-semibold text-gray-700 mb-4 flex items-center gap-2">
+                        <h3 className="font-bold text-slate-900 mb-4 flex items-center gap-2">
                             <User className="w-5 h-5 text-indigo-500" /> Child Information
                         </h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="relative">
-                                <label className="block text-sm font-medium text-gray-600 mb-1">{t('child_name')}</label>
+                                <label className="block text-sm font-bold text-slate-800 mb-1">{t('child_name')}</label>
                                 <input
                                     type="text"
                                     value={formData.childName}
@@ -635,51 +635,70 @@ export default function ScreeningPage() {
                             </div>
                             <div className="relative">
                                 <div className="flex justify-between items-end mb-1">
-                                    <label className="block text-sm font-medium text-gray-600">{t('child_age')}</label>
-                                    <div className="flex bg-gray-100 rounded-lg p-0.5">
+                                    <label className="block text-sm font-medium text-gray-600">
+                                        {t('child_age')} ({ageUnit === 'months' ? 'Months' : 'Years'})
+                                    </label>
+                                    <div className="flex bg-gray-100 dark:bg-slate-800 rounded-lg p-0.5">
                                         <button
                                             type="button"
                                             onClick={() => setAgeUnit('months')}
-                                            className={`px-2 py-0.5 text-xs font-medium rounded-md transition-all ${ageUnit === 'months' ? 'bg-white shadow-sm text-clinical-blue' : 'text-gray-500 hover:text-gray-700'}`}
+                                            className={`px-3 py-1 text-xs font-bold rounded-md transition-all ${ageUnit === 'months' ? 'bg-white dark:bg-slate-700 shadow-sm text-clinical-blue' : 'text-gray-500 hover:text-gray-700 dark:hover:text-slate-300'}`}
                                         >
                                             Months
                                         </button>
                                         <button
                                             type="button"
-                                            onClick={() => {
-                                                setAgeUnit('years');
-                                            }}
-                                            className={`px-2 py-0.5 text-xs font-medium rounded-md transition-all ${ageUnit === 'years' ? 'bg-white shadow-sm text-clinical-blue' : 'text-gray-500 hover:text-gray-700'}`}
+                                            onClick={() => setAgeUnit('years')}
+                                            className={`px-3 py-1 text-xs font-bold rounded-md transition-all ${ageUnit === 'years' ? 'bg-white dark:bg-slate-700 shadow-sm text-clinical-blue' : 'text-gray-500 hover:text-gray-700 dark:hover:text-slate-300'}`}
                                         >
                                             Years
                                         </button>
                                     </div>
                                 </div>
-                                <input
-                                    type="number"
-                                    step="any"
-                                    value={formData.ageMonths}
-                                    onChange={(e) => {
-                                        const val = e.target.value;
-                                        if (val === '') {
-                                            updateField('ageMonths', '');
-                                            return;
-                                        }
-                                        const num = parseFloat(val);
-                                        if (!isNaN(num)) {
-                                            if (ageUnit === 'years') {
-                                                updateField('ageMonths', (num * 12).toString());
-                                                setAgeUnit('months'); // Instantly switch back to show the calculation
-                                            } else {
-                                                updateField('ageMonths', num.toString());
+                                <div className="relative group">
+                                    <input
+                                        type="number"
+                                        step="any"
+                                        value={ageUnit === 'years' ? (formData.ageMonths ? (parseFloat(formData.ageMonths) / 12).toFixed(1) : '') : formData.ageMonths}
+                                        onChange={(e) => {
+                                            const val = e.target.value;
+                                            if (val === '') {
+                                                updateField('ageMonths', '');
+                                                return;
                                             }
-                                        }
-                                    }}
-                                    className="w-full px-4 py-3 pr-12 border-2 border-gray-200 rounded-xl focus:border-clinical-blue focus:ring-2 focus:ring-primary-100 outline-none transition-all bg-white"
-                                    placeholder={ageUnit === 'years' ? "e.g. 3" : "e.g. 36"}
-                                    id="input-age"
-                                />
-                                <VoiceButton field="ageMonths" />
+                                            let num = parseFloat(val);
+                                            if (!isNaN(num)) {
+                                                if (ageUnit === 'years') {
+                                                    // Limit to 5 years
+                                                    if (num > 5) num = 5;
+                                                    updateField('ageMonths', (num * 12).toString());
+                                                } else {
+                                                    // Limit to 60 months
+                                                    if (num > 60) num = 60;
+                                                    updateField('ageMonths', num.toString());
+                                                }
+                                            }
+                                        }}
+                                        className={`w-full px-4 py-3 pr-12 border-2 border-gray-200 rounded-xl focus:border-clinical-blue focus:ring-2 focus:ring-primary-100 outline-none transition-all bg-white text-slate-900 font-bold ${parseFloat(formData.ageMonths) > 60 ? 'border-red-500' : ''}`}
+                                        placeholder={ageUnit === 'years' ? "e.g. 3" : "e.g. 36"}
+                                        id="input-age"
+                                        max={ageUnit === 'years' ? 5 : 60}
+                                    />
+                                    <VoiceButton field="ageMonths" />
+                                </div>
+                                {formData.ageMonths && (
+                                    <p className="text-[11px] font-bold text-clinical-blue mt-1.5 flex items-center gap-1.5 animate-fade-in">
+                                        <span className="bg-clinical-blue/10 px-2 py-0.5 rounded-full">
+                                            {ageUnit === 'months' 
+                                                ? `≈ ${(parseFloat(formData.ageMonths) / 12).toFixed(1)} Years` 
+                                                : `≈ ${formData.ageMonths} Months`
+                                            }
+                                        </span>
+                                        {parseFloat(formData.ageMonths) >= 60 && (
+                                            <span className="text-amber-600 ml-auto">Max age: 5 yrs</span>
+                                        )}
+                                    </p>
+                                )}
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-600 mb-1">{t('child_gender')}</label>
@@ -714,7 +733,7 @@ export default function ScreeningPage() {
                                 { field: 'headCirc', label: 'head_circ', placeholder: 'e.g. 48' },
                             ].map(input => (
                                 <div key={input.field} className="relative">
-                                    <label className={`block text-sm font-medium mb-1 ${input.important ? 'text-clinical-blue' : 'text-gray-600'}`}>
+                                    <label className={`block text-sm font-bold mb-1 ${input.important ? 'text-clinical-blue' : 'text-slate-800'}`}>
                                         {t(input.label)}
                                         {input.important && <span className="text-red-500 ml-1">*</span>}
                                     </label>

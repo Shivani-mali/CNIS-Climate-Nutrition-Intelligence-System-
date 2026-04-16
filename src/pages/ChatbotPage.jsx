@@ -343,7 +343,7 @@ export default function ChatbotPage() {
     };
 
     return (
-        <div className="flex flex-col h-[calc(100vh-12rem)] lg:h-[calc(100vh-8rem)] animate-fade-in">
+        <div className="flex flex-col h-[calc(100vh-14rem)] lg:h-[calc(100vh-8rem)] animate-fade-in relative">
             {/* Chat Header */}
             <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
@@ -426,14 +426,14 @@ export default function ChatbotPage() {
                 <div ref={messagesEndRef} />
             </div>
 
-            {/* Suggested Questions */}
+            {/* Suggested Questions - Scrollable on mobile */}
             {messages.length <= 1 && (
-                <div className="flex flex-wrap gap-2 py-3">
+                <div className="flex overflow-x-auto gap-2 py-3 no-scrollbar shrink-0">
                     {questions.map((q, i) => (
                         <button
                             key={i}
                             onClick={() => handleSend(q)}
-                            className="px-3 py-1.5 bg-primary-50 text-clinical-blue text-xs font-medium rounded-full hover:bg-primary-100 transition-colors"
+                            className="px-4 py-2 bg-primary-50 text-clinical-blue text-xs font-bold rounded-full hover:bg-primary-100 transition-colors whitespace-nowrap shadow-sm border border-primary-100"
                         >
                             {q}
                         </button>

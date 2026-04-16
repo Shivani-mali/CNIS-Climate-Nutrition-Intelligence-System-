@@ -29,6 +29,7 @@ export function AuthProvider({ children }) {
                 setUser(null);
                 setRole(null);
             }
+            // Only set loading false once we've tried to get the role or confirmed no user
             setLoading(false);
         });
 

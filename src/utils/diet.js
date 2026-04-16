@@ -232,6 +232,79 @@ const foodDatabase = {
             tips: ['Seasonal vegetables are most nutritious', 'Include banana for potassium']
         }
     },
+    Bihar: {
+        summer: {
+            foods: [
+                { name: 'Sattu Sharbat', emoji: '🥤', benefit: 'Instant energy, cooling', nutrients: 'Protein, Iron, Fiber' },
+                { name: 'Litti with Chokha', emoji: '🫓', benefit: 'Filling, nutritious', nutrients: 'Protein, Fiber' },
+                { name: 'Mango (Aam)', emoji: '🥭', benefit: 'Seasonal nutrition', nutrients: 'Vitamin A, C' },
+                { name: 'Curd (Dahi)', emoji: '🥛', benefit: 'Probiotic, cooling', nutrients: 'Calcium, Protein' },
+            ],
+            tips: ['Sattu is a budget-friendly complete protein source', 'Oral rehydration is key in Bihar summers']
+        },
+        winter: {
+            foods: [
+                { name: 'Bajra Khichdi', emoji: '🍛', benefit: 'Warming, high energy', nutrients: 'Iron, Magnesium' },
+                { name: 'Makki ki Roti', emoji: '🫓', benefit: 'Energy-dense', nutrients: 'Carbs, Fiber' },
+                { name: 'Gud (Jaggery) with Peanut', emoji: '🍬', benefit: 'Iron booster', nutrients: 'Iron, Protein' },
+            ],
+            tips: ['Jaggery helps maintain body warmth', 'Add ghee to every meal for catch-up growth']
+        }
+    },
+    'West Bengal': {
+        summer: {
+            foods: [
+                { name: 'Panta Bhat (Fermented Rice)', emoji: '🍚', benefit: 'Cooling, probiotic, B12', nutrients: 'Vitamin B12, Iron' },
+                { name: 'Posto (Poppy seeds)', emoji: '🍲', benefit: 'Cooling for gut', nutrients: 'Healthy fats, Fiber' },
+                { name: 'Pumpkin (Kumro) flower fritters', emoji: '🌼', benefit: 'Micronutrient rich', nutrients: 'Beta-carotene' },
+            ],
+            tips: ['Fermented rice is excellent for gut health in summer', 'Add lemon for vitamin C absorption']
+        },
+        winter: {
+            foods: [
+                { name: 'Date Palm Jaggery (Patali Gur)', emoji: '🍯', benefit: 'Rich in Iron and Minerals', nutrients: 'Iron, Magnesium' },
+                { name: 'Kichuri with vegetables', emoji: '🍛', benefit: 'Complete balanced meal', nutrients: 'Protein, Fiber, Vitamins' },
+                { name: 'Fish Soup (Maacher Jhol)', emoji: '🐟', benefit: 'High quality protein', nutrients: 'Omega-3, B12, Protein' },
+            ],
+            tips: ['Freshwater fish is a superior protein source for children']
+        }
+    },
+    Rajasthan: {
+        summer: {
+            foods: [
+                { name: 'Rabri (Pearl Millet drink)', emoji: '🥤', benefit: 'Cooling, energy dense', nutrients: 'Calcium, Magnesium' },
+                { name: 'Ker Sangri', emoji: '🌿', benefit: 'High mineral content from desert', nutrients: 'Zinc, Iron' },
+                { name: 'Chaas (Buttermilk)', emoji: '🥛', benefit: 'Prevents heat stroke', nutrients: 'Calcium' },
+            ],
+            tips: ['Pearl millet (Bajra) can be used as a cooling drink when fermented']
+        },
+        winter: {
+            foods: [
+                { name: 'Bajra Rotla with Ghee', emoji: '🫓', benefit: 'Maximum warming energy', nutrients: 'Iron, Protein, Fats' },
+                { name: 'Gond Ladoo', emoji: '🍬', benefit: 'High calorie, immunity', nutrients: 'Healthy fats, Protein' },
+                { name: 'Lasun (Garlic) Chutney', emoji: '🧄', benefit: 'Warming, medicinal', nutrients: 'Antioxidants' },
+            ],
+            tips: ['High fat intake (Ghee) is essential for winter warmth']
+        }
+    },
+    Punjab: {
+        summer: {
+            foods: [
+                { name: 'Lassi (Sweet/Salted)', emoji: '🥛', benefit: 'Energy & hydration', nutrients: 'Protein, Calcium' },
+                { name: 'Stuffed Paneer Paratha', emoji: '🥙', benefit: 'High protein for growth', nutrients: 'Protein, Calcium, Carbs' },
+                { name: 'Mixed Veg Raita', emoji: '🥒', benefit: 'Cooling & nutritious', nutrients: 'Probiotics, Vitamins' },
+            ],
+            tips: ['Curd based drinks prevent heat exhaustion']
+        },
+        winter: {
+            foods: [
+                { name: 'Makki ki Roti & Sarson Saag', emoji: '🥬', benefit: 'Peak seasonal nutrition', nutrients: 'Iron, Vitamin K, Fiber' },
+                { name: 'Pinni (Wheat/Lentil sweet)', emoji: '🍬', benefit: 'Energy dense snack', nutrients: 'Iron, Protein, Fats' },
+                { name: 'Panjiri', emoji: '🥣', benefit: 'Nutrient concentrated', nutrients: 'Healthy fats, Micronutrients' },
+            ],
+            tips: ['Sesame and jaggery are best winter snacks']
+        }
+    },
     default: {
         summer: {
             foods: [
