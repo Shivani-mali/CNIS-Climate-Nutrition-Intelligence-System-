@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
 import { Lock, Mic } from 'lucide-react';
@@ -7,11 +8,21 @@ export default function LoginPage() {
     const { t } = useTranslation();
     const { loginWithGoogle } = useAuth();
 
+    const [error, setError] = useState(null);
+
     const handleLogin = async () => {
+        setError(null);
         try {
             await loginWithGoogle();
         } catch (error) {
             console.error('Login error:', error);
+            if (error.code === 'auth/unauthorized-domain') {
+                setError('Domain Not Authorized: Please add this Vercel URL to your Firebase Console > Authentication > Settings > Authorized Domains.');
+            } else if (error.code === 'auth/popup-closed-by-user') {
+                setError('Login window was closed. Please try again.');
+            } else {
+                setError(error.message || 'An unexpected error occurred during login.');
+            }
         }
     };
 
@@ -73,6 +84,15 @@ export default function LoginPage() {
                             {t('login')}
                         </span>
                     </button>
+
+                    {error && (
+                        <div className="mt-6 p-4 bg-red-50 border border-red-200 rounded-2xl text-xs text-red-600 font-bold animate-shake">
+                            <p className="flex items-center gap-2 mb-1">
+                                <span className="text-sm">⚠️</span> LOGIN FAILED
+                            </p>
+                            <p>{error}</p>
+                        </div>
+                    )}
 
                     {/* Divider */}
                     <div className="flex items-center gap-4 my-10">
