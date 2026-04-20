@@ -1,3 +1,12 @@
+# Sensitive files
+.env
+.env.*
+test_gemini.cjs
+*.key
+*.pem
+credentials.json
+service-account.json
+
 # Logs
 logs
 *.log
