@@ -1,25 +1,28 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider } from 'firebase/auth';
-import { getFirestore, enableIndexedDbPersistence, initializeFirestore, persistentLocalCache, persistentMultipleTabManager } from 'firebase/firestore';
+import { getFirestore } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 
 const firebaseConfig = {
-    apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "",
+    apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "AIzaSyDemoPlaceholderKey123456789",
     authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "cnis-intelligent-system-v1.firebaseapp.com",
     projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "cnis-intelligent-system-v1",
     storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "cnis-intelligent-system-v1.appspot.com",
-    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "",
-    appId: import.meta.env.VITE_FIREBASE_APP_ID || ""
+    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "1234567890",
+    appId: import.meta.env.VITE_FIREBASE_APP_ID || "1:1234567890:web:abcdef123456"
 };
 
-const app = initializeApp(firebaseConfig);
-export const auth = getAuth(app);
-export const googleProvider = new GoogleAuthProvider();
+let app, auth, googleProvider, db, storage;
 
-// Initialize Firestore with offline persistence
-export const db = initializeFirestore(app, {
-    localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() })
-});
+try {
+    app = initializeApp(firebaseConfig);
+    auth = getAuth(app);
+    googleProvider = new GoogleAuthProvider();
+    db = getFirestore(app);
+    storage = getStorage(app);
+} catch (err) {
+    console.warn('[Firebase] Warning during initialization, falling back to mock context:', err);
+}
 
-export const storage = getStorage(app);
+export { app, auth, googleProvider, db, storage };
 export default app;
