@@ -68,28 +68,7 @@ export default defineConfig({
     })
   ],
   build: {
-    chunkSizeWarningLimit: 1500,
-    rollupOptions: {
-      output: {
-        manualChunks(id) {
-          if (id.includes('node_modules')) {
-            if (id.includes('@tensorflow')) {
-              return 'vendor-tensorflow';
-            }
-            if (id.includes('firebase')) {
-              return 'vendor-firebase';
-            }
-            if (id.includes('pdfjs-dist') || id.includes('pdf-parse')) {
-              return 'vendor-pdf';
-            }
-            if (id.includes('framer-motion')) {
-              return 'vendor-framer';
-            }
-            return 'vendor'; 
-          }
-        }
-      }
-    }
+    chunkSizeWarningLimit: 2000
   },
   server: {
     port: 5173,
