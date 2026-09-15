@@ -128,12 +128,12 @@ export default function AnalyticsPage() {
             {/* Header with Export */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h2 className="text-3xl font-black text-slate-900 tracking-tight">{t('analytics')}</h2>
-                    <p className="text-slate-500 font-medium">Real-time Epidemiological Nutrition Monitoring</p>
+                    <h2 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">{t('analytics')}</h2>
+                    <p className="text-slate-500 dark:text-slate-400 font-medium">Real-time Epidemiological Nutrition Monitoring</p>
                 </div>
                 <button
                     onClick={handleExport}
-                    className="flex items-center justify-center gap-2 px-6 py-3 bg-slate-900 text-white rounded-2xl font-bold hover:bg-slate-800 transition-all shadow-lg shadow-slate-200"
+                    className="flex items-center justify-center gap-2 px-6 py-3 bg-slate-900 hover:bg-slate-800 dark:bg-slate-800 dark:hover:bg-slate-700 text-white rounded-2xl font-bold transition-all shadow-lg shadow-slate-200 dark:shadow-none"
                 >
                     <Download className="w-5 h-5" />
                     Export Research Dataset
@@ -145,18 +145,18 @@ export default function AnalyticsPage() {
                 {stats.length > 0 ? stats.map((stat, i) => (
                     <div
                         key={i}
-                        className="glass p-6 rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-md transition-all group"
+                        className="glass p-6 rounded-[2rem] border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm hover:shadow-md transition-all group"
                     >
                         <div className="flex items-center justify-between mb-4">
-                            <div className="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <div className="w-12 h-12 rounded-2xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center group-hover:scale-110 transition-transform">
                                 {stat.icon}
                             </div>
-                            <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 bg-slate-50 px-2.5 py-1 rounded-full">
+                            <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-400 bg-slate-50 dark:bg-slate-800 px-2.5 py-1 rounded-full">
                                 {stat.trend}
                             </span>
                         </div>
-                        <p className="text-3xl font-black text-slate-900 mb-1">{stat.value}</p>
-                        <p className="text-xs font-bold text-slate-500 uppercase tracking-wide">{stat.label}</p>
+                        <p className="text-3xl font-black text-slate-900 dark:text-white mb-1">{stat.value}</p>
+                        <p className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide">{stat.label}</p>
                     </div>
                 )) : (
                     <div className="col-span-4 p-8 text-center glass rounded-2xl">
@@ -167,30 +167,30 @@ export default function AnalyticsPage() {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {/* Regional Hotspots Card */}
-                <div className="glass p-8 rounded-[2.5rem] border border-slate-100 shadow-sm">
+                <div className="glass p-8 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm">
                     <div className="flex items-center gap-3 mb-8">
-                        <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center">
-                            <MapPin className="w-5 h-5 text-blue-600" />
+                        <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center">
+                            <MapPin className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                         </div>
-                        <h3 className="text-xl font-black text-slate-900 tracking-tight italic">Regional Malnutrition Hotspots</h3>
+                        <h3 className="text-xl font-black text-slate-900 dark:text-white tracking-tight italic">Regional Malnutrition Hotspots</h3>
                     </div>
 
                     <div className="space-y-4">
                         {regions.map((region, i) => (
-                            <div key={i} className="group flex items-center justify-between p-5 rounded-3xl bg-slate-50/50 border border-transparent hover:border-slate-200 hover:bg-white transition-all cursor-pointer">
+                            <div key={i} className="group flex items-center justify-between p-5 rounded-3xl bg-slate-50/50 dark:bg-slate-800/40 border border-transparent hover:border-slate-200 dark:hover:border-slate-700 hover:bg-white dark:hover:bg-slate-800 transition-all cursor-pointer">
                                 <div className="flex items-center gap-4">
                                     <div className={`w-3 h-3 rounded-full animate-pulse bg-${region.status === 'red' ? 'rose' : region.status === 'orange' ? 'amber' : 'emerald'}-500`} />
                                     <div>
-                                        <p className="font-black text-slate-900">{region.name}</p>
+                                        <p className="font-black text-slate-900 dark:text-white">{region.name}</p>
                                         <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{region.coords}</p>
                                     </div>
                                 </div>
                                 <div className="flex items-center gap-6">
                                     <div className="text-right">
-                                        <p className="text-sm font-black text-rose-600">{region.sam} SAM <span className="text-slate-300 mx-1">•</span></p>
+                                        <p className="text-sm font-black text-rose-600 dark:text-rose-400">{region.sam} SAM <span className="text-slate-300 dark:text-slate-600 mx-1">•</span></p>
                                         <p className="text-[10px] font-bold text-slate-400 uppercase">{region.mam} MAM CASES</p>
                                     </div>
-                                    <ChevronRight className="w-5 h-5 text-slate-300 group-hover:text-slate-900 transition-colors" />
+                                    <ChevronRight className="w-5 h-5 text-slate-300 dark:text-slate-600 group-hover:text-slate-900 dark:group-hover:text-white transition-colors" />
                                 </div>
                             </div>
                         ))}
@@ -199,12 +199,12 @@ export default function AnalyticsPage() {
                 </div>
 
                 {/* Trend Analysis Chart */}
-                <div className="glass p-8 rounded-[2.5rem] border border-slate-100 shadow-sm">
+                <div className="glass p-8 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm">
                     <div className="flex items-center gap-3 mb-8">
-                        <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center">
-                            <TrendingUp className="w-5 h-5 text-emerald-600" />
+                        <div className="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-900/30 flex items-center justify-center">
+                            <TrendingUp className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
                         </div>
-                        <h3 className="text-xl font-black text-slate-900 tracking-tight italic">Clinical Recovery Trends</h3>
+                        <h3 className="text-xl font-black text-slate-900 dark:text-white tracking-tight italic">Clinical Recovery Trends</h3>
                     </div>
 
                     <div className="h-64 flex items-end justify-between gap-3 px-2">
@@ -220,51 +220,51 @@ export default function AnalyticsPage() {
                         ))}
                     </div>
 
-                    <div className="mt-8 flex flex-wrap items-center justify-center gap-6 pt-6 border-t border-slate-50">
+                    <div className="mt-8 flex flex-wrap items-center justify-center gap-6 pt-6 border-t border-slate-50 dark:border-slate-800">
                         <div className="flex items-center gap-2">
                             <div className="w-3 h-3 rounded-full bg-rose-500" />
-                            <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">SAM Burden</span>
+                            <span className="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">SAM Burden</span>
                         </div>
                         <div className="flex items-center gap-2">
                             <div className="w-3 h-3 rounded-full bg-orange-400" />
-                            <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">MAM Burden</span>
+                            <span className="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">MAM Burden</span>
                         </div>
                         <div className="flex items-center gap-2">
                             <div className="w-3 h-3 rounded-full bg-emerald-400" />
-                            <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Recoveries</span>
+                            <span className="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">Recoveries</span>
                         </div>
                     </div>
                 </div>
             </div>
 
             {/* Intervention Queue */}
-            <div className="glass p-8 rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden">
+            <div className="glass p-8 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm overflow-hidden">
                 <div className="flex items-center gap-3 mb-8">
                     <Activity className="w-6 h-6 text-rose-500" />
-                    <h3 className="text-xl font-black text-slate-900 tracking-tight italic">Priority Intervention Queue</h3>
+                    <h3 className="text-xl font-black text-slate-900 dark:text-white tracking-tight italic">Priority Intervention Queue</h3>
                 </div>
                 <div className="overflow-x-auto">
                     <table className="w-full text-left">
                         <thead>
-                            <tr className="border-b border-slate-100">
+                            <tr className="border-b border-slate-100 dark:border-slate-800">
                                 <th className="pb-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Patient ID</th>
                                 <th className="pb-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Risk Level</th>
                                 <th className="pb-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Clinical MUAC</th>
                                 <th className="pb-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">Action</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-slate-50">
+                        <tbody className="divide-y divide-slate-50 dark:divide-slate-800">
                             {interventions.map((row, i) => (
-                                <tr key={i} className="group hover:bg-slate-50/50 transition-colors">
-                                    <td className="py-4 py-4 font-black text-slate-900 tracking-tighter">#CNIS-{row.id}</td>
+                                <tr key={i} className="group hover:bg-slate-50/50 dark:hover:bg-slate-800/40 transition-colors">
+                                    <td className="py-4 font-black text-slate-900 dark:text-white tracking-tighter">#CNIS-{row.id}</td>
                                     <td className="py-4">
-                                        <span className={`px-3 py-1 bg-${row.zone}-50 text-${row.zone}-600 rounded-full text-[10px] font-black uppercase tracking-widest border border-${row.zone}-100`}>
+                                        <span className="px-3 py-1 bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-300 rounded-full text-[10px] font-black uppercase tracking-widest border border-rose-100 dark:border-rose-900/50">
                                             {row.status}
                                         </span>
                                     </td>
-                                    <td className="py-4 font-black text-slate-600">{row.muac}</td>
+                                    <td className="py-4 font-black text-slate-600 dark:text-slate-300">{row.muac}</td>
                                     <td className="py-4 text-right">
-                                        <button className="text-[10px] font-black text-blue-600 uppercase tracking-widest hover:text-blue-800 underline decoration-2 underline-offset-4">
+                                        <button className="text-[10px] font-black text-blue-600 dark:text-blue-400 uppercase tracking-widest hover:text-blue-800 dark:hover:text-blue-300 underline decoration-2 underline-offset-4">
                                             Assign Medic
                                         </button>
                                     </td>

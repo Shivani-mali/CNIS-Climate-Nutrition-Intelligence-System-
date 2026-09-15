@@ -351,22 +351,22 @@ export default function ChatbotPage() {
                         <span className="text-2xl">🏥</span>
                     </div>
                     <div>
-                        <h2 className="text-lg font-bold text-gray-800">NutriCare Medibot</h2>
-                        <p className="text-xs text-green-500 flex items-center gap-1">
+                        <h2 className="text-lg font-bold text-gray-800 dark:text-white">NutriCare Medibot</h2>
+                        <p className="text-xs text-green-500 dark:text-green-400 flex items-center gap-1">
                             <span className="w-2 h-2 rounded-full bg-green-400 inline-block" />
                             Online • {i18n.language === 'hi' ? 'हिंदी' : i18n.language === 'mr' ? 'मराठी' : 'English'}
                         </p>
                     </div>
                 </div>
                 <div className="flex items-center gap-2">
-                    <span className="px-2 py-1 bg-primary-50 text-clinical-blue text-xs rounded-full font-medium">
+                    <span className="px-2.5 py-1 bg-primary-50 dark:bg-slate-800 text-clinical-blue dark:text-blue-400 text-xs rounded-full font-medium border border-primary-100 dark:border-slate-700">
                         🏥 Health AI
                     </span>
                 </div>
             </div>
 
             {/* Messages */}
-            <div className="flex-1 overflow-y-auto rounded-2xl bg-gray-50/50 border border-gray-100 p-4 space-y-4">
+            <div className="flex-1 overflow-y-auto rounded-2xl bg-gray-50/50 dark:bg-slate-900/60 border border-gray-100 dark:border-slate-800 p-4 space-y-4">
                 {messages.map((msg, i) => (
                     <div
                         key={i}
@@ -374,27 +374,27 @@ export default function ChatbotPage() {
                     >
                         <div className={`max-w-[85%] md:max-w-[70%] rounded-2xl p-4 ${msg.role === 'user'
                             ? 'gradient-clinical text-white rounded-br-md'
-                            : 'bg-white border border-gray-100 shadow-sm rounded-bl-md'
+                            : 'bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 shadow-sm rounded-bl-md'
                             }`}>
                             {msg.role === 'bot' && (
-                                <div className="flex items-center gap-2 mb-2 pb-2 border-b border-gray-100">
+                                <div className="flex items-center gap-2 mb-2 pb-2 border-b border-gray-100 dark:border-slate-700">
                                     <span className="text-sm">🏥</span>
-                                    <span className="text-xs font-semibold text-clinical-blue">Medibot</span>
+                                    <span className="text-xs font-semibold text-clinical-blue dark:text-blue-400">Medibot</span>
                                     {msg.sources && msg.sources.length > 0 && (
-                                        <span className="text-[10px] px-1.5 py-0.5 bg-blue-50 text-blue-600 rounded-full font-medium">📚 RAG</span>
+                                        <span className="text-[10px] px-1.5 py-0.5 bg-blue-50 dark:bg-blue-900/40 text-blue-600 dark:text-blue-300 rounded-full font-medium">📚 RAG</span>
                                     )}
-                                    <span className="text-[10px] px-1.5 py-0.5 bg-green-50 text-green-600 rounded-full font-medium ml-auto">Health AI</span>
+                                    <span className="text-[10px] px-1.5 py-0.5 bg-green-50 dark:bg-green-900/40 text-green-600 dark:text-green-300 rounded-full font-medium ml-auto">Health AI</span>
                                 </div>
                             )}
-                            <div className={`text-sm leading-relaxed ${msg.role === 'user' ? 'text-white' : 'text-gray-700'}`}>
+                            <div className={`text-sm leading-relaxed ${msg.role === 'user' ? 'text-white' : 'text-gray-700 dark:text-slate-200'}`}>
                                 {renderText(msg.text)}
                             </div>
                             {msg.role === 'bot' && msg.sources && msg.sources.length > 0 && (
-                                <div className="mt-3 pt-2 border-t border-gray-100">
-                                    <p className="text-[10px] text-gray-400 mb-1">📚 Sources:</p>
+                                <div className="mt-3 pt-2 border-t border-gray-100 dark:border-slate-700">
+                                    <p className="text-[10px] text-gray-400 dark:text-slate-400 mb-1">📚 Sources:</p>
                                     <div className="flex flex-wrap gap-1">
                                         {msg.sources.map((src, si) => (
-                                            <span key={si} className="text-[10px] px-2 py-0.5 bg-blue-50 text-blue-600 rounded-full font-medium">
+                                            <span key={si} className="text-[10px] px-2 py-0.5 bg-blue-50 dark:bg-blue-900/40 text-blue-600 dark:text-blue-300 rounded-full font-medium">
                                                 {src}
                                             </span>
                                         ))}
@@ -407,15 +407,15 @@ export default function ChatbotPage() {
 
                 {isTyping && (
                     <div className="flex justify-start">
-                        <div className="bg-white rounded-2xl rounded-bl-md p-4 border border-gray-100 shadow-sm">
+                        <div className="bg-white dark:bg-slate-800 rounded-2xl rounded-bl-md p-4 border border-gray-100 dark:border-slate-700 shadow-sm">
                             <div className="flex items-center gap-2 mb-2">
-                                <span className="text-xs text-gray-400">Analyzing your question...</span>
+                                <span className="text-xs text-gray-400 dark:text-slate-400">Analyzing your question...</span>
                             </div>
                             <div className="flex gap-1.5">
                                 {[0, 1, 2].map(i => (
                                     <div
                                         key={i}
-                                        className="w-2.5 h-2.5 rounded-full bg-clinical-blue/40"
+                                        className="w-2.5 h-2.5 rounded-full bg-clinical-blue/40 dark:bg-blue-400/40"
                                         style={{ animation: `pulse-soft 1s ease-in-out ${i * 0.2}s infinite` }}
                                     />
                                 ))}
@@ -433,7 +433,7 @@ export default function ChatbotPage() {
                         <button
                             key={i}
                             onClick={() => handleSend(q)}
-                            className="px-4 py-2 bg-primary-50 text-clinical-blue text-xs font-bold rounded-full hover:bg-primary-100 transition-colors whitespace-nowrap shadow-sm border border-primary-100"
+                            className="px-4 py-2 bg-primary-50 dark:bg-slate-800 text-clinical-blue dark:text-blue-300 text-xs font-bold rounded-full hover:bg-primary-100 dark:hover:bg-slate-700 transition-colors whitespace-nowrap shadow-sm border border-primary-100 dark:border-slate-700"
                         >
                             {q}
                         </button>
@@ -447,7 +447,7 @@ export default function ChatbotPage() {
                     onClick={toggleListening}
                     className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-all shrink-0 ${isListening
                         ? 'bg-red-500 text-white voice-active'
-                        : 'bg-gray-100 text-gray-500 hover:bg-primary-50 hover:text-clinical-blue'
+                        : 'bg-gray-100 dark:bg-slate-800 text-gray-500 dark:text-slate-300 hover:bg-primary-50 dark:hover:bg-slate-700 hover:text-clinical-blue'
                         }`}
                     title="Voice input"
                 >
@@ -462,7 +462,7 @@ export default function ChatbotPage() {
                         onChange={(e) => setInput(e.target.value)}
                         onKeyDown={(e) => e.key === 'Enter' && handleSend()}
                         placeholder={t('chat_placeholder') || 'Ask any health question...'}
-                        className="w-full px-5 py-3 pr-12 border-2 border-gray-200 rounded-2xl focus:border-clinical-blue focus:ring-2 focus:ring-primary-100 outline-none transition-all bg-white"
+                        className="w-full px-5 py-3 pr-12 border-2 border-gray-200 dark:border-slate-700 rounded-2xl focus:border-clinical-blue focus:ring-2 focus:ring-primary-100 outline-none transition-all bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
                         id="chat-input"
                     />
                 </div>
@@ -472,7 +472,7 @@ export default function ChatbotPage() {
                     disabled={!input.trim()}
                     className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-all shrink-0 ${input.trim()
                         ? 'gradient-clinical text-white shadow-md hover:shadow-lg'
-                        : 'bg-gray-100 text-gray-300'
+                        : 'bg-gray-100 dark:bg-slate-800 text-gray-300 dark:text-slate-600'
                         }`}
                     id="chat-send-btn"
                 >
@@ -483,7 +483,7 @@ export default function ChatbotPage() {
             </div>
 
             {/* Disclaimer */}
-            <p className="text-center text-[10px] text-gray-400 mt-2 px-4">
+            <p className="text-center text-[10px] text-gray-400 dark:text-slate-500 mt-2 px-4">
                 ⚕️ This assistant provides general health information only. It does NOT replace professional medical advice. Always consult a qualified healthcare provider.
             </p>
         </div>

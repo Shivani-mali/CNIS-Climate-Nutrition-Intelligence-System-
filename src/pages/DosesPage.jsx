@@ -255,19 +255,19 @@ export default function DosesPage() {
             </div>
 
             {role === 'parent' && (
-                <div className="glass p-5 border border-gray-100 rounded-2xl flex flex-col sm:flex-row sm:items-center gap-4 bg-white shadow-sm">
+                <div className="glass p-5 border border-gray-100 dark:border-slate-800 rounded-2xl flex flex-col sm:flex-row sm:items-center gap-4 bg-white dark:bg-slate-900 shadow-sm">
                     <div className="flex-1">
-                        <label className="text-sm font-bold text-slate-800 mb-1 flex items-center gap-2">
+                        <label className="text-sm font-bold text-slate-800 dark:text-slate-100 mb-1 flex items-center gap-2">
                             <Calendar className="w-4 h-4 text-clinical-blue" />
                             {t('child_dob', 'Child\'s Date of Birth')}
                         </label>
-                        <p className="text-[11px] text-gray-500 font-medium">{t('dob_desc', 'Enter DOB to calculate exact upcoming vaccine dates.')}</p>
+                        <p className="text-[11px] text-gray-500 dark:text-slate-400 font-medium">{t('dob_desc', 'Enter DOB to calculate exact upcoming vaccine dates.')}</p>
                     </div>
                     <input 
                         type="date" 
                         value={childDOB}
                         onChange={handeDOBChange}
-                        className="px-4 py-2 rounded-xl border-2 border-gray-100 focus:border-clinical-blue focus:ring-0 bg-white text-slate-900 font-bold outline-none"
+                        className="px-4 py-2 rounded-xl border-2 border-gray-100 dark:border-slate-700 focus:border-clinical-blue focus:ring-0 bg-white dark:bg-slate-800 text-slate-900 dark:text-white font-bold outline-none"
                     />
                 </div>
             )}
@@ -278,47 +278,47 @@ export default function DosesPage() {
                         key={schedule.ageKey}
                         className={`rounded-2xl border-2 transition-all duration-300 overflow-hidden ${
                             expandedAge === schedule.ageKey 
-                                ? 'border-clinical-blue bg-white shadow-md' 
-                                : 'border-gray-50 bg-white hover:border-gray-100 hover:shadow-sm cursor-pointer'
+                                ? 'border-clinical-blue bg-white dark:bg-slate-900 shadow-md' 
+                                : 'border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-gray-200 dark:hover:border-slate-700 hover:shadow-sm cursor-pointer'
                         }`}
                         onClick={() => setExpandedAge(expandedAge === schedule.ageKey ? null : schedule.ageKey)}
                     >
                         <div className="p-4 flex items-center justify-between">
                             <div className="flex items-center gap-4">
                                 <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-bold text-sm shrink-0 transition-colors ${
-                                    expandedAge === schedule.ageKey ? 'bg-clinical-blue text-white' : 'bg-gray-100 text-gray-400'
+                                    expandedAge === schedule.ageKey ? 'bg-clinical-blue text-white' : 'bg-gray-100 dark:bg-slate-800 text-gray-500 dark:text-slate-300'
                                 }`}>
                                     {t(schedule.ageKey).split(' ')[0]}
                                 </div>
-                                <h3 className={`font-bold text-base ${expandedAge === schedule.ageKey ? 'text-slate-900' : 'text-slate-700'}`}>
+                                <h3 className={`font-bold text-base ${expandedAge === schedule.ageKey ? 'text-slate-900 dark:text-white' : 'text-slate-700 dark:text-slate-200'}`}>
                                     {t(schedule.ageKey)}
                                 </h3>
                             </div>
-                            <div className="text-gray-300">
+                            <div className="text-gray-400 dark:text-slate-400">
                                 {expandedAge === schedule.ageKey ? <ChevronDown className="w-5 h-5 text-clinical-blue" /> : <ChevronRight className="w-5 h-5" />}
                             </div>
                         </div>
                         
                         {expandedAge === schedule.ageKey && (
-                            <div className="px-4 pb-4 bg-white border-t border-gray-50">
+                            <div className="px-4 pb-4 bg-white dark:bg-slate-900 border-t border-gray-100 dark:border-slate-800">
                                 <div className="space-y-4 mt-4">
                                     {schedule.vaccines.map((vaccine, idx) => {
                                         const isCompleted = completedDoses[vaccine.name];
                                         
                                         return (
                                             <div key={idx} className={`p-4 rounded-xl border-2 transition-all ${
-                                                isCompleted ? 'bg-green-50/20 border-green-100' : 'bg-white border-gray-50 hover:border-gray-100'
+                                                isCompleted ? 'bg-green-50/20 dark:bg-green-900/10 border-green-200 dark:border-green-800/40' : 'bg-white dark:bg-slate-800/50 border-gray-100 dark:border-slate-700 hover:border-gray-200'
                                             }`}>
                                                 <div className="flex items-start gap-4">
                                                     <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm ${
-                                                        isCompleted ? 'bg-green-100 text-green-600' : 'bg-blue-50 text-blue-600'
+                                                        isCompleted ? 'bg-green-100 dark:bg-green-900/40 text-green-600 dark:text-green-400' : 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400'
                                                     }`}>
                                                         {isCompleted ? <CheckCircle className="w-6 h-6" /> : <Syringe className="w-6 h-6" />}
                                                     </div>
                                                     <div className="flex-1 min-w-0">
                                                         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-2">
                                                             <div className="flex items-center gap-2">
-                                                                <h4 className={`font-black text-lg ${isCompleted ? 'text-green-800' : 'text-slate-900'}`}>
+                                                                <h4 className={`font-black text-lg ${isCompleted ? 'text-green-800 dark:text-green-300' : 'text-slate-900 dark:text-white'}`}>
                                                                     {vaccine.name}
                                                                 </h4>
                                                                 {isCompleted && (
@@ -333,30 +333,30 @@ export default function DosesPage() {
                                                                         onClick={(e) => { e.stopPropagation(); toggleDose(vaccine.name); }}
                                                                         className={`text-[11px] px-3 py-1.5 rounded-lg font-bold transition-all shadow-sm ${
                                                                             isCompleted 
-                                                                                ? 'bg-gray-100 text-gray-600 hover:bg-gray-200' 
+                                                                                ? 'bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-slate-200 hover:bg-gray-200' 
                                                                                 : 'bg-clinical-blue text-white hover:bg-clinical-dark'
                                                                         }`}
                                                                     >
                                                                         {isCompleted ? t('undo', 'Undo') : t('mark_done', 'Mark Done')}
                                                                     </button>
                                                                 )}
-                                                                <span className="text-[10px] px-2 py-1 bg-gray-50 border border-gray-100 rounded-lg text-slate-500 font-bold uppercase tracking-wider">
+                                                                <span className="text-[10px] px-2 py-1 bg-gray-50 dark:bg-slate-700/60 border border-gray-100 dark:border-slate-600 rounded-lg text-slate-500 dark:text-slate-300 font-bold uppercase tracking-wider">
                                                                     {t(vaccine.routeKey)}
                                                                 </span>
                                                             </div>
                                                         </div>
-                                                        <p className={`text-sm font-bold leading-snug ${isCompleted ? 'text-slate-600/80' : 'text-slate-600'}`}>
+                                                        <p className={`text-sm font-bold leading-snug ${isCompleted ? 'text-slate-600/80 dark:text-slate-300/80' : 'text-slate-600 dark:text-slate-300'}`}>
                                                             {t(vaccine.descKey)}
                                                         </p>
                                                     
                                                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
-                                                            <div className="p-3 bg-blue-50/50 rounded-xl border border-blue-100 shadow-sm">
-                                                                <span className="text-[10px] font-black text-blue-600 uppercase tracking-widest block mb-1">{t('why_its_important')}</span>
-                                                                <span className="text-slate-800 text-[13px] font-bold block leading-relaxed">{t(vaccine.impKey)}</span>
+                                                            <div className="p-3 bg-blue-50/50 dark:bg-blue-950/40 rounded-xl border border-blue-100 dark:border-blue-900/50 shadow-sm">
+                                                                <span className="text-[10px] font-black text-blue-600 dark:text-blue-400 uppercase tracking-widest block mb-1">{t('why_its_important')}</span>
+                                                                <span className="text-slate-800 dark:text-slate-200 text-[13px] font-bold block leading-relaxed">{t(vaccine.impKey)}</span>
                                                             </div>
-                                                            <div className="p-3 bg-red-50/50 rounded-xl border border-red-100 shadow-sm">
-                                                                <span className="text-[10px] font-black text-red-600 uppercase tracking-widest block mb-1">{t('risk_if_missed')}</span>
-                                                                <span className="text-slate-800 text-[13px] font-bold block leading-relaxed">{t(vaccine.riskKey)}</span>
+                                                            <div className="p-3 bg-red-50/50 dark:bg-red-950/40 rounded-xl border border-red-100 dark:border-red-900/50 shadow-sm">
+                                                                <span className="text-[10px] font-black text-red-600 dark:text-red-400 uppercase tracking-widest block mb-1">{t('risk_if_missed')}</span>
+                                                                <span className="text-slate-800 dark:text-slate-200 text-[13px] font-bold block leading-relaxed">{t(vaccine.riskKey)}</span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -371,13 +371,13 @@ export default function DosesPage() {
                 ))}
             </div>
 
-            <div className="glass p-5 rounded-2xl flex items-start gap-4 border border-amber-100 bg-white shadow-sm">
-                <div className="w-10 h-10 bg-amber-50 rounded-xl flex items-center justify-center flex-shrink-0 animate-pulse-soft">
-                    <Info className="w-5 h-5 text-amber-600" />
+            <div className="glass p-5 rounded-2xl flex items-start gap-4 border border-amber-100 dark:border-amber-900/40 bg-white dark:bg-slate-900 shadow-sm">
+                <div className="w-10 h-10 bg-amber-50 dark:bg-amber-900/30 rounded-xl flex items-center justify-center flex-shrink-0 animate-pulse-soft">
+                    <Info className="w-5 h-5 text-amber-600 dark:text-amber-400" />
                 </div>
                 <div className="space-y-1">
-                    <h3 className="font-black text-slate-900 leading-tight">{t('important_note')}</h3>
-                    <p className="text-xs text-slate-600 font-bold leading-relaxed pr-6">
+                    <h3 className="font-black text-slate-900 dark:text-white leading-tight">{t('important_note')}</h3>
+                    <p className="text-xs text-slate-600 dark:text-slate-300 font-bold leading-relaxed pr-6">
                         {t('vaccine_disclaimer')}
                     </p>
                 </div>

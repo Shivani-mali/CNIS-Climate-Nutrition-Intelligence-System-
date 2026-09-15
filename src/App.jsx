@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import './config/i18n';
@@ -69,6 +69,16 @@ function AppContent({ showSplash, onSplashFinish }) {
 
 export default function App() {
   const [showSplash, setShowSplash] = useState(true);
+
+  // Initialize dark mode on root element on app startup
+  useEffect(() => {
+    const saved = localStorage.getItem('cnis_dark_mode');
+    if (saved === 'true') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, []);
 
   const handleSplashFinish = useCallback(() => {
     setShowSplash(false);

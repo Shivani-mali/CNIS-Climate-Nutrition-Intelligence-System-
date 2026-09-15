@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@variant dark (&:where(.dark, .dark *));
+
 @theme {
   /* CNIS Clinical Blue Theme */
   --color-primary-50: #eff6ff;
@@ -168,14 +170,14 @@ h1, h2, h3, h4, h5, h6, button, .nav-link, .btn {
 .dark body,
 body.dark {
   background-color: #0b1120;
-  color: #e2e8f0;
+  color: #f1f5f9;
 }
 
 .dark .glass {
-  background: rgba(15, 23, 42, 0.8);
+  background: rgba(15, 23, 42, 0.85);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .dark .bg-surface {
@@ -187,119 +189,192 @@ body.dark {
 }
 
 .dark .bg-white\/50 {
-  background-color: rgba(30, 41, 59, 0.5);
+  background-color: rgba(30, 41, 59, 0.7);
 }
 
+.dark .bg-white\/95 {
+  background-color: rgba(15, 23, 42, 0.95);
+}
+
+.dark .bg-slate-50,
 .dark .bg-gray-50 {
   background-color: #1e293b;
 }
 
+.dark .bg-slate-50\/50,
 .dark .bg-gray-50\/50 {
-  background-color: rgba(30, 41, 59, 0.5);
+  background-color: rgba(30, 41, 59, 0.6);
 }
 
-.dark .bg-gray-100 {
+.dark .bg-gray-100,
+.dark .bg-slate-100 {
   background-color: #334155;
 }
 
-.dark .bg-gray-200 {
+.dark .bg-gray-200,
+.dark .bg-slate-200 {
   background-color: #475569;
 }
 
-.dark .text-gray-800 {
-  color: #f1f5f9;
+/* Dark mode text colors */
+.dark .text-slate-950,
+.dark .text-slate-900,
+.dark .text-gray-900,
+.dark .text-gray-800,
+.dark .text-slate-800 {
+  color: #f8fafc;
 }
 
+.dark .text-slate-700,
 .dark .text-gray-700 {
   color: #e2e8f0;
 }
 
+.dark .text-slate-600,
 .dark .text-gray-600 {
   color: #cbd5e1;
 }
 
+.dark .text-slate-500,
 .dark .text-gray-500 {
   color: #94a3b8;
 }
 
+.dark .text-slate-400,
 .dark .text-gray-400 {
-  color: #64748b;
+  color: #94a3b8;
 }
 
 .dark .text-clinical-dark {
   color: #93c5fd;
 }
 
-.dark .border-gray-200\/50 {
+/* Dark mode status alert text contrast */
+.dark .text-red-700,
+.dark .text-red-800 {
+  color: #fca5a5;
+}
+
+.dark .text-red-600 {
+  color: #f87171;
+}
+
+.dark .text-orange-700,
+.dark .text-orange-800 {
+  color: #fdba74;
+}
+
+.dark .text-orange-600 {
+  color: #fb923c;
+}
+
+.dark .text-green-700,
+.dark .text-green-800 {
+  color: #86efac;
+}
+
+.dark .text-green-600 {
+  color: #4ade80;
+}
+
+.dark .text-blue-600,
+.dark .text-indigo-600 {
+  color: #93c5fd;
+}
+
+.dark .text-amber-700,
+.dark .text-amber-600 {
+  color: #fcd34d;
+}
+
+/* Dark mode borders */
+.dark .border-gray-200\/50,
+.dark .border-slate-200\/50 {
   border-color: rgba(51, 65, 85, 0.5);
 }
 
-.dark .border-gray-200 {
+.dark .border-gray-200,
+.dark .border-slate-200,
+.dark .border-slate-100 {
   border-color: #334155;
 }
 
-.dark .border-gray-100 {
+.dark .border-gray-100,
+.dark .border-gray-50,
+.dark .border-slate-50 {
   border-color: #1e293b;
 }
 
 .dark .bg-primary-50 {
-  background-color: rgba(26, 115, 232, 0.15);
+  background-color: rgba(26, 115, 232, 0.18);
 }
 
 .dark .bg-primary-100 {
-  background-color: rgba(26, 115, 232, 0.25);
+  background-color: rgba(26, 115, 232, 0.28);
 }
 
 .dark .bg-clinical-light {
-  background-color: rgba(26, 115, 232, 0.2);
+  background-color: rgba(26, 115, 232, 0.25);
 }
 
-.dark .bg-red-50 {
-  background-color: rgba(220, 38, 38, 0.15);
+.dark .bg-red-50,
+.dark .bg-red-50\/50 {
+  background-color: rgba(220, 38, 38, 0.18);
 }
 
 .dark .bg-red-100 {
-  background-color: rgba(220, 38, 38, 0.25);
+  background-color: rgba(220, 38, 38, 0.28);
 }
 
-.dark .bg-orange-50 {
-  background-color: rgba(249, 115, 22, 0.15);
+.dark .bg-orange-50,
+.dark .bg-orange-50\/50 {
+  background-color: rgba(249, 115, 22, 0.18);
 }
 
 .dark .bg-orange-100 {
-  background-color: rgba(249, 115, 22, 0.25);
+  background-color: rgba(249, 115, 22, 0.28);
 }
 
-.dark .bg-green-50 {
-  background-color: rgba(34, 197, 94, 0.15);
+.dark .bg-green-50,
+.dark .bg-green-50\/20 {
+  background-color: rgba(34, 197, 94, 0.18);
 }
 
 .dark .bg-green-100 {
-  background-color: rgba(34, 197, 94, 0.25);
+  background-color: rgba(34, 197, 94, 0.28);
 }
 
 .dark .bg-amber-50 {
-  background-color: rgba(245, 158, 11, 0.15);
+  background-color: rgba(245, 158, 11, 0.18);
 }
 
-.dark .bg-blue-50 {
-  background-color: rgba(59, 130, 246, 0.15);
+.dark .bg-blue-50,
+.dark .bg-blue-50\/50 {
+  background-color: rgba(59, 130, 246, 0.18);
 }
 
 .dark input,
 .dark select,
 .dark textarea {
+  background-color: #1e293b !important;
+  border-color: #334155 !important;
+  color: #f8fafc !important;
+}
+
+.dark select option {
   background-color: #1e293b;
-  border-color: #334155;
-  color: #e2e8f0;
+  color: #f8fafc;
 }
 
-.dark input::placeholder {
-  color: #64748b;
+.dark input::placeholder,
+.dark textarea::placeholder {
+  color: #64748b !important;
 }
 
-.dark input:focus {
-  border-color: #3b82f6;
+.dark input:focus,
+.dark select:focus,
+.dark textarea:focus {
+  border-color: #3b82f6 !important;
 }
 
 .dark .shadow-sm {

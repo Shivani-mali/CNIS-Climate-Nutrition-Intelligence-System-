@@ -49,21 +49,21 @@ export function DietPlanContent() {
         <div className="space-y-6 animate-fade-in">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
-                    <h2 className="text-2xl font-bold text-slate-900">{t('diet_plan_title', 'Diet Plan')}</h2>
-                    <p className="text-sm font-bold text-slate-500">{t('diet_plan_subtitle') || 'Age-wise dietary recommendations for child nutrition'}</p>
+                    <h2 className="text-2xl font-bold text-slate-900 dark:text-white">{t('diet_plan_title', 'Diet Plan')}</h2>
+                    <p className="text-sm font-bold text-slate-500 dark:text-slate-400">{t('diet_plan_subtitle') || 'Age-wise dietary recommendations for child nutrition'}</p>
                 </div>
 
                 {/* Veg / Non-Veg Toggle - Matching Reports button style */}
                 <div className="flex items-center bg-gray-100 dark:bg-slate-800 p-1 rounded-xl w-full md:w-auto border border-gray-100 dark:border-slate-700">
                     <button
                         onClick={() => setIsNonVeg(false)}
-                        className={`flex-1 md:flex-none flex items-center justify-center gap-2 px-6 py-2 rounded-lg font-bold transition-all duration-300 ${!isNonVeg ? 'bg-clinical-blue text-white shadow-md' : 'text-gray-500 dark:text-gray-400 hover:text-gray-700'}`}
+                        className={`flex-1 md:flex-none flex items-center justify-center gap-2 px-6 py-2 rounded-lg font-bold transition-all duration-300 ${!isNonVeg ? 'bg-clinical-blue text-white shadow-md' : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'}`}
                     >
                         {t('diet_plan_veg', 'Vegetarian')}
                     </button>
                     <button
                         onClick={() => setIsNonVeg(true)}
-                        className={`flex-1 md:flex-none flex items-center justify-center gap-2 px-6 py-2 rounded-lg font-bold transition-all duration-300 ${isNonVeg ? 'bg-clinical-blue text-white shadow-md' : 'text-gray-500 dark:text-gray-400 hover:text-gray-700'}`}
+                        className={`flex-1 md:flex-none flex items-center justify-center gap-2 px-6 py-2 rounded-lg font-bold transition-all duration-300 ${isNonVeg ? 'bg-clinical-blue text-white shadow-md' : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'}`}
                     >
                         {t('diet_plan_nonveg', 'Non-Veg')}
                     </button>
@@ -73,14 +73,14 @@ export function DietPlanContent() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {dietPlans.map((plan, index) => (
                     <div key={index} className="glass p-5 rounded-2xl border border-gray-100 dark:border-slate-800 card-hover bg-white dark:bg-slate-900 shadow-sm overflow-hidden flex items-start gap-4">
-                        <div className={`w-12 h-12 rounded-xl flex-shrink-0 flex items-center justify-center shadow-sm ${index % 4 === 0 ? 'bg-blue-50' : index % 4 === 1 ? 'bg-red-50' : index % 4 === 2 ? 'bg-orange-50' : 'bg-green-50'}`}>
+                        <div className={`w-12 h-12 rounded-xl flex-shrink-0 flex items-center justify-center shadow-sm ${index % 4 === 0 ? 'bg-blue-50 dark:bg-blue-900/30' : index % 4 === 1 ? 'bg-red-50 dark:bg-red-900/30' : index % 4 === 2 ? 'bg-orange-50 dark:bg-orange-900/30' : 'bg-green-50 dark:bg-green-900/30'}`}>
                             <span className="flex items-center justify-center">
                                 {plan.icon}
                             </span>
                         </div>
                         <div className="flex-1">
-                            <h3 className="font-black text-slate-900 text-lg">{plan.ageGroup}</h3>
-                            <div className="mt-2 text-[13px] text-slate-700 font-bold leading-relaxed">
+                            <h3 className="font-black text-slate-900 dark:text-white text-lg">{plan.ageGroup}</h3>
+                            <div className="mt-2 text-[13px] text-slate-700 dark:text-slate-300 font-bold leading-relaxed">
                                 {isNonVeg ? plan.nonVeg : plan.veg}
                             </div>
                         </div>
@@ -89,11 +89,11 @@ export function DietPlanContent() {
             </div>
             
             <div className="glass p-4 rounded-2xl flex items-center gap-3 border border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm">
-                <div className="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <Info className="w-5 h-5 text-blue-600" />
+                <div className="w-10 h-10 bg-blue-50 dark:bg-blue-900/30 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <Info className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                 </div>
-                <p className="text-xs text-slate-600 font-bold leading-relaxed">
-                    <strong className="text-slate-900 font-black">{t('tips')}:</strong> {t('diet_plan_tip', 'These are general guidelines. Always consult with a healthcare provider or nutritionist for a personalized diet plan based on the child\'s specific health conditions and severity of malnutrition.')}
+                <p className="text-xs text-slate-600 dark:text-slate-300 font-bold leading-relaxed">
+                    <strong className="text-slate-900 dark:text-white font-black">{t('tips')}:</strong> {t('diet_plan_tip', 'These are general guidelines. Always consult with a healthcare provider or nutritionist for a personalized diet plan based on the child\'s specific health conditions and severity of malnutrition.')}
                 </p>
             </div>
         </div>
