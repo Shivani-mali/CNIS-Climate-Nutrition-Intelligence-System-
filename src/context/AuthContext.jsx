@@ -41,15 +41,22 @@ export function AuthProvider({ children }) {
             const result = await signInWithPopup(auth, googleProvider);
             return result.user;
         } catch (error) {
-            console.error('Login failed:', error);
-            // Demo mode fallback
-            if (error.code === 'auth/configuration-not-found' ||
-                error.code === 'auth/api-key-not-valid' ||
-                error.code === 'auth/invalid-api-key') {
+            console.warn('Firebase login notice, activating Demo mode fallback:', error);
+            const errStr = (String(error?.code || '') + ' ' + String(error?.message || '')).toLowerCase();
+            
+            // Demo mode fallback for invalid API keys, popup blocks, unauthorized domain or offline
+            if (
+                errStr.includes('api-key') ||
+                errStr.includes('configuration-not-found') ||
+                errStr.includes('unauthorized-domain') ||
+                errStr.includes('popup') ||
+                errStr.includes('network') ||
+                !import.meta.env.VITE_FIREBASE_API_KEY
+            ) {
                 const demoUser = {
-                    uid: 'demo-user-' + Date.now(),
-                    displayName: 'Demo User',
-                    email: 'demo@cnis.app',
+                    uid: 'demo-asha-worker-' + Date.now(),
+                    displayName: 'ASHA Worker (Demo)',
+                    email: 'asha.worker@cnis.gov.in',
                     photoURL: null,
                     isDemo: true
                 };
